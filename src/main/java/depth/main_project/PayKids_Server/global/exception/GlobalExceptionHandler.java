@@ -1,5 +1,6 @@
 package depth.main_project.PayKids_Server.global.exception;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import depth.main_project.PayKids_Server.global.dto.ApiResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,4 +66,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiResult, HttpStatus.BAD_REQUEST);
     }
 
+    // JsonProcessingException 처리
+    @ExceptionHandler(JsonProcessingException.class)
+    public ResponseEntity<String> handleJsonProcessingException(JsonProcessingException ex) {
+        // 에러 메시지와 상태 코드 반환
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("JSON 처리 중 오류가 발생했습니다: " + ex.getMessage());
+    }
 }
