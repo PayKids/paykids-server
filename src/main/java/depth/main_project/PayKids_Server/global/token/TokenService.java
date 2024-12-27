@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
@@ -50,6 +51,19 @@ public class TokenService {
             return claims.get("userId", Long.class);
         } catch (RuntimeException e){
             throw new MapperException(ErrorCode.TOKEN_ERROR);
+        }
+    }
+
+    public Boolean expiredToken(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            Date expiration = claims.getExpiration();
+            return expiration.after(new Date());
+        } catch (RuntimeException e){
+            throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         }
     }
 }
