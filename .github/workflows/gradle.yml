@@ -74,6 +74,7 @@ jobs:
             -e DB_URL=${{ secrets.DB_URL }} \
             -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
             -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            -e GPT_KEY=${{ secrets.GPT_KEY }} \
             -p 80:8080 ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-paykids:latest
 
       # 4. 미사용 이미지를 정리합니다
