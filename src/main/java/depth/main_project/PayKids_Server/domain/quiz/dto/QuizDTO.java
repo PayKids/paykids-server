@@ -22,7 +22,7 @@ public class QuizDTO {
     private String question;
     private List<String> choices;
     private String answer;
-    private String imageURL;
+    private List<String> imageURL;
 
     public static QuizDTO fromEntity(Quiz quiz, ObjectMapper objectMapper) throws JsonProcessingException {
         try {
@@ -37,7 +37,10 @@ public class QuizDTO {
             dto.choices = objectMapper.readValue(quiz.getChoices(), new TypeReference<List<String>>() {});
 
             dto.answer = quiz.getAnswer();
-            dto.imageURL = quiz.getImageURL();
+
+            // JSON을 List<String>으로 변환
+            dto.imageURL = objectMapper.readValue(quiz.getImageURL(),  new TypeReference<List<String>>() {});
+
             return dto;
         } catch (JsonProcessingException e) {
             // 예외 발생 시 GlobalExceptionHandler로 위임
