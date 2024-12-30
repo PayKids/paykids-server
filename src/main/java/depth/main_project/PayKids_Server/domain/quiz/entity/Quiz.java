@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @Entity
 @Getter
+@Setter
 @Table(name = "Quiz")
 public class Quiz {
     @Id
@@ -22,7 +24,7 @@ public class Quiz {
     private String choices;
     private String answer;
 
-    @Column(nullable = true)
+    @Column(columnDefinition = "JSON", nullable = true)
     private String imageURL;
 
     @Builder
