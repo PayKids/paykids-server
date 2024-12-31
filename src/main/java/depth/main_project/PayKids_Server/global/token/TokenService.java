@@ -23,8 +23,8 @@ public class TokenService {
 
     private final UserRepository userRepository;
 
-    public String generateToken(String email){
-        Optional<User> user = userRepository.findByEmail(email);
+    public String generateToken(Long id){
+        Optional<User> user = userRepository.findById(id);
 
         LocalDate today = LocalDate.now();
         Date expiration = Date.from(today.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -46,7 +46,7 @@ public class TokenService {
     public Long getUserIdFromToken(String token) {
         try {
             Claims claims = Jwts.parser()
-                    .parseClaimsJws(token)
+                    .parseClaimsJwt(token)
                     .getBody();
             return claims.get("userId", Long.class);
         } catch (RuntimeException e){
@@ -57,7 +57,7 @@ public class TokenService {
     public Boolean expiredToken(String token) {
         try {
             Claims claims = Jwts.parser()
-                    .parseClaimsJws(token)
+                    .parseClaimsJwt(token)
                     .getBody();
 
             Date expiration = claims.getExpiration();
