@@ -19,13 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuizController {
     private final QuizService quizService;
-    private final TokenService tokenService;
-
-    @GetMapping("/token")
-    public ApiResult<String> getToken(@RequestParam Long id){
-
-        return ApiResult.ok(tokenService.generateToken(id));
-    }
 
     @Operation(summary = "스테이지 이름 조회", description = "조회할 스테이지 번호를 입력하면 주제가 조회됩니다.")
     @ApiResponses(value = {
