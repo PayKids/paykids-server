@@ -75,7 +75,7 @@ jobs:
       # 3. 최신 이미지를 컨테이너화하여 실행시킵니다
       - name: Run Docker Container with Secrets
         run: |
-          sudo docker run \
+          sudo docker run -d\
             -e DB_URL=${{ secrets.DB_URL }} \
             -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
             -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
