@@ -65,17 +65,24 @@ jobs:
       # 2. 기존의 컨테이너를 중지시킵니다
       - name: docker stop container
         run: |
-          sudo docker ps -q --filter "name=github-actions-paykids" | xargs -r sudo docker stop
+          sudo docker ps -q | xargs -r sudo docker stop
+          sudo docker ps -aq | xargs -r sudo docker rm
 
-      # 3. 최신 이미지를 컨테이너화하여 실행시킵니다
+      # 3. 80번 포트를 사용하는 프로세스를 중지시킵니다
+      - name: Free Port 80
+        run: |
+          sudo lsof -i :80 | awk 'NR>1 {print $2}' | xargs -r sudo kill -9
+
+      # 4. 최신 이미지를 컨테이너화하여 실행시킵니다
       - name: Run Docker Container with Secrets
         run: |
-          sudo docker run \
+          sudo docker run -d\
             -e DB_URL=${{ secrets.DB_URL }} \
             -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
             -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-paykids:latest
+            -e GPT_KEY=${{ secrets.GPT_KEY }} \
+            -p 80:8080 ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-paykids:latest
 
-      # 4. 미사용 이미지를 정리합니다
+      # 5. 미사용 이미지를 정리합니다
       - name: delete old docker image
         run: sudo docker system prune -f

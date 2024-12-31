@@ -1,19 +1,16 @@
 spring:
   application:
     name: paykids
-
   jpa:
     hibernate:
       ddl-auto: update
     open-in-view: false
-
   #Database
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME} #[DB_USERNAME]
     password: ${DB_PASSWORD} #[DB_PASSWORD]
     driver-class-name: com.mysql.cj.jdbc.Driver #[JDBC DRIVER]
-
 #Swagger
 springdoc:
   default-consumes-media-type: application/json
@@ -32,3 +29,9 @@ springdoc:
     display-request-duration: true
   paths-to-match:
     - /**
+
+gpt:
+  model: gpt-3.5-turbo
+  api:
+    key: ${GPT_KEY}
+    url: "https://api.openai.com/v1/chat/completions"

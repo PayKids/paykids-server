@@ -25,8 +25,8 @@ public class User {
     //서버에 저장되어 있는 유저 프로필 이미지 주소
     private String profileImageURL;
 
-    //클리어를 완료한 스테이지 상태를 의미한다.
-    private Integer stageStatus = 0;
+    //진행해야 하는 스테이지 상태를 의미한다.
+    private Integer stageStatus = 1;
 
     @Builder
     public User(String username, String nickname, String email, String profileImageURL) {
