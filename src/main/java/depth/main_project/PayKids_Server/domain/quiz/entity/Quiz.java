@@ -17,6 +17,7 @@ public class Quiz {
     private Long id;
     private int stage;
     private int number;
+    private int count;
     private QuizType quizType;
     private String question;
 
@@ -28,9 +29,10 @@ public class Quiz {
     private String imageURL;
 
     @Builder
-    public Quiz(int stage, int number, QuizType quizType, String question, String choices, String answer, String imageURL) {
+    public Quiz(int stage, int number, int count, QuizType quizType, String question, String choices, String answer, String imageURL) {
         this.stage = stage;
         this.number = number;
+        this.count = count;
         this.quizType = quizType;
         this.question = question;
         this.choices = choices;
