@@ -11,6 +11,11 @@ spring:
     username: ${DB_USERNAME} #[DB_USERNAME]
     password: ${DB_PASSWORD} #[DB_PASSWORD]
     driver-class-name: com.mysql.cj.jdbc.Driver #[JDBC DRIVER]
+
+server:
+  address: 0.0.0.0  # 모든 네트워크 인터페이스에서 요청을 수락하도록 설정
+  port: 8080       # 포트 설정 (기본값이 8080)
+
 #Swagger
 springdoc:
   default-consumes-media-type: application/json
