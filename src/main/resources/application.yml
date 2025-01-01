@@ -40,3 +40,6 @@ gpt:
   api:
     key: ${GPT_KEY}
     url: "https://api.openai.com/v1/chat/completions"
+
+jwt:
+  secretKey: ${JWT_SECRET}

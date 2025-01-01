@@ -14,4 +14,11 @@ public class UserDTO {
     private String email;
     private String profileImageURL;
     private Integer stageStatus;
+
+    public UserDTO(String nickname, String email, String profileImageURL) {
+        this.nickname = nickname;
+        this.email = email;
+        this.profileImageURL = profileImageURL;
+    }
 }
+

@@ -4,7 +4,6 @@ import depth.main_project.PayKids_Server.domain.quiz.dto.QuizClearedDTO;
 import depth.main_project.PayKids_Server.domain.quiz.dto.QuizDTO;
 import depth.main_project.PayKids_Server.domain.quiz.service.QuizService;
 import depth.main_project.PayKids_Server.global.dto.ApiResult;
-import depth.main_project.PayKids_Server.global.token.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

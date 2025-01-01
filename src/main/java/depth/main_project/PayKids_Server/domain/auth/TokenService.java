@@ -1,4 +1,4 @@
-package depth.main_project.PayKids_Server.global.token;
+package depth.main_project.PayKids_Server.domain.auth;
 
 import depth.main_project.PayKids_Server.domain.user.entity.User;
 import depth.main_project.PayKids_Server.domain.user.repository.UserRepository;
@@ -8,10 +8,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 
@@ -22,18 +21,33 @@ public class TokenService {
 
     private final UserRepository userRepository;
 
-    public String generateToken(Long id){
+    @Value(value = "${jwt.secretKey}")
+    private String SECRET_KEY;
+
+    private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 30; // 30분
+    private static final long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24 * 7; // 7일
+
+    public String generateAccessToken(Long id) {
+        return generateToken(id, ACCESS_TOKEN_EXPIRATION);
+    }
+
+    public String generateRefreshToken(Long id) {
+        return generateToken(id, REFRESH_TOKEN_EXPIRATION);
+    }
+
+    public String generateToken(Long id, long expirationTime){
         Optional<User> user = userRepository.findById(id);
 
-        LocalDate today = LocalDate.now();
-        Date expiration = Date.from(today.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-
         if (user.isPresent()) {
+            Date now = new Date();
+            Date expiration = new Date(now.getTime() + expirationTime);
+
             String token = Jwts.builder()
                     .claim("userId", user.get().getId())
                     .claim("nickname", user.get().getNickname())
+                    .setIssuedAt(now)
                     .setExpiration(expiration)
-                    .setIssuedAt(new Date())
+                    .signWith(io.jsonwebtoken.SignatureAlgorithm.HS256, SECRET_KEY)
                     .compact();
 
             return token;
@@ -44,8 +58,10 @@ public class TokenService {
 
     public Long getUserIdFromToken(String token) {
         try {
-            Claims claims = Jwts.parser()
-                    .parseClaimsJwt(token)
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY)
+                    .build()
+                    .parseClaimsJws(token)
                     .getBody();
             return claims.get("userId", Long.class);
         } catch (RuntimeException e){
@@ -55,8 +71,10 @@ public class TokenService {
 
     public Boolean expiredToken(String token) {
         try {
-            Claims claims = Jwts.parser()
-                    .parseClaimsJwt(token)
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY)
+                    .build()
+                    .parseClaimsJws(token)
                     .getBody();
 
             Date expiration = claims.getExpiration();
