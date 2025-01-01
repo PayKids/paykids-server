@@ -30,4 +30,18 @@ public class UserController {
         UserDTO userDTO = userService.getUserInfo(userId);
         return ApiResult.ok(userDTO);
     }
+ㄴ
+    @Operation(summary = "닉네임 저장", description = "닉네임 저장")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 확인됨"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 값"),
+            @ApiResponse(responseCode = "500", description = "서버 오류 발생")
+    })
+    @PostMapping("/nickname/save")
+    public ApiResult<String> saveNickname(@RequestHeader("Authorization") String accessToken,
+                                          @RequestParam String nickname) {
+        Long userId = tokenService.getUserIdFromToken(accessToken);
+        String result = userService.saveNickname(userId, nickname);
+        return ApiResult.ok(result);
+    }
 }

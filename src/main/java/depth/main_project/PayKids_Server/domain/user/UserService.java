@@ -20,4 +20,18 @@ public class UserService {
 
         return new UserDTO(user.getId(), user.getUsername(), user.getNickname(), user.getEmail(), user.getProfileImageURL(), user.getStageStatus());
     }
+
+    public String saveNickname(Long userId, String nickname) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
+
+        if (user.getUsername() != null) {
+            throw new MapperException(ErrorCode.NICKNAME_ALREADY_EXISTS);
+        }
+
+        user.setUsername(nickname);
+        userRepository.save(user);
+
+        return "Nickname saved successfully";
+    }
 }
