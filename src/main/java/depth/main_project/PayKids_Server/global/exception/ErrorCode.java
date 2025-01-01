@@ -12,6 +12,7 @@ public enum ErrorCode {
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "Request Body를 통해 전달된 값이 유효하지 않습니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
     NICKNAME_ALREADY_EXISTS(HttpStatus.CONFLICT,"Nickname already exists"),
+    SAME_NICKNAME(HttpStatus.BAD_REQUEST, "New nickname cannot be the same as the current nickname"),
     STAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "Stage not found"),
     QUIZ_NOT_FOUND(HttpStatus.NOT_FOUND, "Quiz not found"),
     TOKEN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "토큰 해석 문제가 발생했습니다"),

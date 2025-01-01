@@ -34,4 +34,19 @@ public class UserService {
 
         return "Nickname saved successfully";
     }
+
+    public String changeNickname(Long userId, String newNickname) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
+
+
+        if (user.getUsername().equals(newNickname)) {
+            throw new MapperException(ErrorCode.SAME_NICKNAME);
+        }
+
+        user.setUsername(newNickname); // 닉네임 변경
+        userRepository.save(user);
+
+        return "Nickname changed successfully";
+    }
 }
