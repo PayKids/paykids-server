@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -19,17 +16,18 @@ public class AuthController {
     private final AuthService authService;
     private final TokenService tokenService;
 
-    @Operation(summary = "토큰 발급", description = "이전 토큰을 입력하면 새로운 토큰을 발급합니다.")
+    @Operation(summary = "회원가입 및 로그인시 토큰 발급", description = "회원가입 및 로그인시, idToken을 이용해 accessToken과 refreshToken발급")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 확인됨"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 값"),
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @PostMapping("/login")
-    public ApiResult<LoginResponse> login(@RequestParam String idToken) {
-        LoginResponse response = authService.processLogin(idToken);
+    public ApiResult<LoginResponse> signupOrLogin(@RequestParam String idToken) {
+        LoginResponse response = authService.signupOrLogin(idToken);
         return ApiResult.ok(response);
     }
+
 
     @Operation(summary = "refresh 토큰 발급", description = "기존 AccessToken을 이용해 refreshToken을 재발급하고, AccessToken은 새로 생성")
     @ApiResponses(value = {

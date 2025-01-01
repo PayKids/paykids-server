@@ -5,6 +5,8 @@ import depth.main_project.PayKids_Server.domain.user.repository.UserRepository;
 import depth.main_project.PayKids_Server.global.exception.ErrorCode;
 import depth.main_project.PayKids_Server.global.exception.MapperException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +45,7 @@ public class TokenService {
             Date expiration = new Date(now.getTime() + expirationTime);
 
             String token = Jwts.builder()
-                    .claim("userId", user.get().getId())
+                    .claim("userId", user.get().getId()) // email or userId가 아닌 pk로 바꾸는거 어떠한지요?
                     .claim("nickname", user.get().getNickname())
                     .setIssuedAt(now)
                     .setExpiration(expiration)
@@ -56,15 +58,21 @@ public class TokenService {
         }
     }
 
+
     public Long getUserIdFromToken(String token) {
         try {
+            // Access Token 파싱 및 유효성 검사
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(SECRET_KEY)
                     .build()
-                    .parseClaimsJws(token)
+                    .parseClaimsJws(token.replace("Bearer ", "")) // Bearer 제거
                     .getBody();
-            return claims.get("userId", Long.class);
-        } catch (RuntimeException e){
+
+            // 사용자 ID 추출
+            return claims.get("userId", Long.class); // email로 변경하는 방향 어떠하신지요? userId라는 pk는 DB에만 접근하는게 좋을 것 같아서요!
+        } catch (ExpiredJwtException e) {
+            throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
+        } catch (JwtException e) {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
     }
