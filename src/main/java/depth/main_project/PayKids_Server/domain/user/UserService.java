@@ -49,4 +49,20 @@ public class UserService {
 
         return "Nickname changed successfully";
     }
+
+    public String changeEmail(Long userId, String newEmail) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
+
+        if (userRepository.existsByEmail(newEmail)) {
+            throw new MapperException(ErrorCode.EMAIL_ALREADY_EXISTS);
+        }
+        if (user.getEmail().equals(newEmail)) {
+            throw new MapperException(ErrorCode.SAME_EMAIL);
+        }
+
+        user.setEmail(newEmail);
+        userRepository.save(user);
+        return "Email changed successfully";
+    }
 }

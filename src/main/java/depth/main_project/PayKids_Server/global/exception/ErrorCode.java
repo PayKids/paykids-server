@@ -13,6 +13,8 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
     NICKNAME_ALREADY_EXISTS(HttpStatus.CONFLICT,"Nickname already exists"),
     SAME_NICKNAME(HttpStatus.BAD_REQUEST, "New nickname cannot be the same as the current nickname"),
+    EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT,"Email already exists"),
+    SAME_EMAIL(HttpStatus.BAD_REQUEST, "New email cannot be the same as the current email"),
     STAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "Stage not found"),
     QUIZ_NOT_FOUND(HttpStatus.NOT_FOUND, "Quiz not found"),
     TOKEN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "토큰 해석 문제가 발생했습니다"),
