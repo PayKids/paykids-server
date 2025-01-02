@@ -29,24 +29,24 @@ public class TokenService {
     private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 30; // 30분
     private static final long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24 * 7; // 7일
 
-    public String generateAccessToken(Long id) {
-        return generateToken(id, ACCESS_TOKEN_EXPIRATION);
+    public String generateAccessToken(String UUID) {
+        return generateToken(UUID, ACCESS_TOKEN_EXPIRATION);
     }
 
-    public String generateRefreshToken(Long id) {
-        return generateToken(id, REFRESH_TOKEN_EXPIRATION);
+    public String generateRefreshToken(String UUID) {
+        return generateToken(UUID, REFRESH_TOKEN_EXPIRATION);
     }
 
-    public String generateToken(Long id, long expirationTime){
-        Optional<User> user = userRepository.findById(id);
+    public String generateToken(String UUID, long expirationTime){
+        Optional<User> user = userRepository.findByUuid(UUID);
 
         if (user.isPresent()) {
             Date now = new Date();
             Date expiration = new Date(now.getTime() + expirationTime);
 
             String token = Jwts.builder()
-                    .claim("userId", user.get().getId()) // email or userId가 아닌 pk로 바꾸는거 어떠한지요?
-                    .claim("nickname", user.get().getNickname())
+                    .claim("uuid", user.get().getUuid()) // UUID로 변경
+                    .claim("email", user.get().getEmail())
                     .setIssuedAt(now)
                     .setExpiration(expiration)
                     .signWith(io.jsonwebtoken.SignatureAlgorithm.HS256, SECRET_KEY)
@@ -59,7 +59,7 @@ public class TokenService {
     }
 
 
-    public Long getUserIdFromToken(String token) {
+    public String getUserUuidFromToken(String token) {
         try {
             // Access Token 파싱 및 유효성 검사
             Claims claims = Jwts.parserBuilder()
@@ -68,8 +68,8 @@ public class TokenService {
                     .parseClaimsJws(token.replace("Bearer ", "")) // Bearer 제거
                     .getBody();
 
-            // 사용자 ID 추출
-            return claims.get("userId", Long.class); // email로 변경하는 방향 어떠하신지요? userId라는 pk는 DB에만 접근하는게 좋을 것 같아서요!
+            // 사용자 UUID 추출
+            return claims.get("uuid", String.class); // UUID로 변경
         } catch (ExpiredJwtException e) {
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         } catch (JwtException e) {

@@ -10,6 +10,7 @@ import lombok.Getter;
 public class UserDTO {
     private Long id;
     private String username;
+    private String uuid;
     private String nickname;
     private String email;
     private String profileImageURL;

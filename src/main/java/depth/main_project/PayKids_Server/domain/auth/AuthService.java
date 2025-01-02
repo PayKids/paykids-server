@@ -26,8 +26,8 @@ public class AuthService {
                 .orElseGet(() -> registerNewUser(userDTO)); // 존재하지 않으면 회원가입
 
         // 3. Access Token 및 Refresh Token 생성
-        String accessToken = tokenService.generateAccessToken(user.getId());
-        String refreshToken = tokenService.generateRefreshToken(user.getId());
+        String accessToken = tokenService.generateAccessToken(user.getUuid());
+        String refreshToken = tokenService.generateRefreshToken(user.getUuid());
 
         // 4. Access Token, Refresh Token 반환
         return new LoginResponse(accessToken, refreshToken);

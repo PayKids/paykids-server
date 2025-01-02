@@ -40,17 +40,17 @@ public class QuizService {
 
     //현재 진행해야하는 스테이지 번호 반환 메서드
     public int getUserStageStatus(String token){
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userUUID = tokenService.getUserUuidFromToken(token);
 
         if (tokenService.expiredToken(token) == false){
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         }
 
-        if (userId == null) {
+        if (userUUID == null) {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userUUID)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         return user.getStageStatus();
@@ -70,20 +70,20 @@ public class QuizService {
     //정답 확인 메서드, 제출된 답안 저장까지 진행
     @Transactional
     public Boolean isQuizAnswerTrue(int stage, int number, String answer, String token){
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userUUID = tokenService.getUserUuidFromToken(token);
 
         if (tokenService.expiredToken(token) == false){
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         }
 
-        if (userId == null) {
+        if (userUUID == null) {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
         Quiz quiz = quizRepository.findByNumberAndStage(number, stage)
                 .orElseThrow(() -> new MapperException(ErrorCode.QUIZ_NOT_FOUND));
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userUUID)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         if (quiz.getQuizType() == QuizType.SHORT_ANSWER){
@@ -173,17 +173,17 @@ public class QuizService {
 
     @Transactional
     public Boolean isPassedStage(int stage, String token){
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userUUID = tokenService.getUserUuidFromToken(token);
 
         if (tokenService.expiredToken(token) == false){
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         }
 
-        if (userId == null) {
+        if (userUUID == null) {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userUUID)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         List<Submission> checkStatus = submissionRepository.findAllByUser(user);
@@ -214,17 +214,17 @@ public class QuizService {
 
     @Transactional
     public Boolean isAllCleared(int stage, String token){
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userUUID = tokenService.getUserUuidFromToken(token);
 
         if (tokenService.expiredToken(token) == false){
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         }
 
-        if (userId == null) {
+        if (userUUID == null) {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userUUID)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         List<Submission> checkStatus = submissionRepository.findAllByUser(user);
@@ -255,16 +255,16 @@ public class QuizService {
 
     //복습인지 아닌지 확인
     public Boolean isRestudy(int stage, String token){
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userUUID = tokenService.getUserUuidFromToken(token);
         if (tokenService.expiredToken(token) == false){
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         }
 
-        if (userId == null) {
+        if (userUUID == null) {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userUUID)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         if (user.getStageStatus() > stage){
@@ -276,18 +276,18 @@ public class QuizService {
 
     //오답 리스트 제공
     public List<Integer> getIncorrectQuizList(int stage, String token){
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userUUID = tokenService.getUserUuidFromToken(token);
         List<Integer> quizList = new ArrayList<>();
 
         if (tokenService.expiredToken(token) == false){
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         }
 
-        if (userId == null) {
+        if (userUUID == null) {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userUUID)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         List<Submission> checkStatus = submissionRepository.findAllByUser(user);
@@ -307,17 +307,17 @@ public class QuizService {
 
     //스테이지 도전 기록이 있는지 확인
     public Boolean isNotYet(int stage, String token){
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userUUID = tokenService.getUserUuidFromToken(token);
 
         if (tokenService.expiredToken(token) == false){
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         }
 
-        if (userId == null) {
+        if (userUUID == null) {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userUUID)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         List<Submission> checkStatus = submissionRepository.findAllByUser(user);
@@ -344,17 +344,17 @@ public class QuizService {
     }
 
     public Boolean isIncorrect (int stage, String token){
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userUUID = tokenService.getUserUuidFromToken(token);
 
         if (tokenService.expiredToken(token) == false){
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         }
 
-        if (userId == null) {
+        if (userUUID == null) {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userUUID)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         List<Submission> checkStatus = submissionRepository.findAllByUser(user);

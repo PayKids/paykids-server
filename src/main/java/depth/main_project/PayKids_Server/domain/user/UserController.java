@@ -26,8 +26,8 @@ public class UserController {
     })
     @GetMapping("/info")
     public ApiResult<UserDTO> getUserInfo(@RequestHeader("Authorization") String accessToken) {
-        Long userId = tokenService.getUserIdFromToken(accessToken);
-        UserDTO userDTO = userService.getUserInfo(userId);
+        String userUUID = tokenService.getUserUuidFromToken(accessToken);
+        UserDTO userDTO = userService.getUserInfo(userUUID);
         return ApiResult.ok(userDTO);
     }
 
@@ -40,8 +40,8 @@ public class UserController {
     @PostMapping("/nickname/save")
     public ApiResult<String> saveNickname(@RequestHeader("Authorization") String accessToken,
                                           @RequestParam String nickname) {
-        Long userId = tokenService.getUserIdFromToken(accessToken);
-        String result = userService.saveNickname(userId, nickname);
+        String userUUID = tokenService.getUserUuidFromToken(accessToken);
+        String result = userService.saveNickname(userUUID, nickname);
         return ApiResult.ok(result);
     }
 
@@ -54,8 +54,8 @@ public class UserController {
     @PostMapping("/nickname/change")
     public ApiResult<String> changeNickname(@RequestHeader("Authorization") String accessToken,
                                             @RequestParam String newNickname) {
-        Long userId = tokenService.getUserIdFromToken(accessToken);
-        String result = userService.changeNickname(userId, newNickname);
+        String userUUID = tokenService.getUserUuidFromToken(accessToken);
+        String result = userService.changeNickname(userUUID, newNickname);
         return ApiResult.ok(result);
     }
 
@@ -68,8 +68,8 @@ public class UserController {
     @PostMapping("/email/change")
     public ApiResult<String> changeEmail(@RequestHeader("Authorization") String accessToken,
                                          @RequestParam String newEmail) {
-        Long userId = tokenService.getUserIdFromToken(accessToken);
-        String result = userService.changeEmail(userId, newEmail);
+        String userUUID = tokenService.getUserUuidFromToken(accessToken);
+        String result = userService.changeEmail(userUUID, newEmail);
         return ApiResult.ok(result);
     }
 }

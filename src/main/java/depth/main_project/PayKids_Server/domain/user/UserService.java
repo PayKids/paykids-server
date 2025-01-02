@@ -14,15 +14,15 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserDTO getUserInfo(Long userId) {
-        User user = userRepository.findById(userId)
+    public UserDTO getUserInfo(String uuid) {
+        User user = userRepository.findByUuid(uuid)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
-        return new UserDTO(user.getId(), user.getUsername(), user.getNickname(), user.getEmail(), user.getProfileImageURL(), user.getStageStatus());
+        return new UserDTO(user.getId(), user.getUsername(), user.getUuid(), user.getNickname(), user.getEmail(), user.getProfileImageURL(), user.getStageStatus());
     }
 
-    public String saveNickname(Long userId, String nickname) {
-        User user = userRepository.findById(userId)
+    public String saveNickname(String uuid, String nickname) {
+        User user = userRepository.findByUuid(uuid)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         if (user.getUsername() != null) {
@@ -35,8 +35,8 @@ public class UserService {
         return "Nickname saved successfully";
     }
 
-    public String changeNickname(Long userId, String newNickname) {
-        User user = userRepository.findById(userId)
+    public String changeNickname(String uuid, String newNickname) {
+        User user = userRepository.findByUuid(uuid)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
 
@@ -50,8 +50,8 @@ public class UserService {
         return "Nickname changed successfully";
     }
 
-    public String changeEmail(Long userId, String newEmail) {
-        User user = userRepository.findById(userId)
+    public String changeEmail(String uuid, String newEmail) {
+        User user = userRepository.findByUuid(uuid)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         if (userRepository.existsByEmail(newEmail)) {

@@ -29,7 +29,7 @@ public class AuthController {
     }
 
 
-    @Operation(summary = "refresh 토큰 발급", description = "기존 AccessToken을 이용해 refreshToken을 재발급하고, AccessToken은 새로 생성")
+    @Operation(summary = "refresh 토큰 발급", description = "기존 refreshToken을 이용해 accessToken을 재발급하고, refreshToken은 새로 생성")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 확인됨"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 값"),
@@ -37,14 +37,14 @@ public class AuthController {
     })
     @PostMapping("/refresh")
     public ApiResult<LoginResponse> refresh(@RequestParam String refreshToken) {
-        Long userId = tokenService.getUserIdFromToken(refreshToken);
+        String UserUUID = tokenService.getUserUuidFromToken(refreshToken);
 
         // Refresh Token 검증 및 사용자 정보 확인
         if (tokenService.expiredToken(refreshToken)) {
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         }
 
-        String newAccessToken = tokenService.generateAccessToken(userId);
+        String newAccessToken = tokenService.generateAccessToken(UserUUID);
         return ApiResult.ok(new LoginResponse(newAccessToken, refreshToken));
     }
 }
