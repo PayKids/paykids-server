@@ -9,11 +9,11 @@ import depth.main_project.PayKids_Server.domain.allowance.entity.AllowanceType;
 import depth.main_project.PayKids_Server.domain.allowance.entity.Category;
 import depth.main_project.PayKids_Server.domain.allowance.repository.AllowanceChartRepository;
 import depth.main_project.PayKids_Server.domain.allowance.repository.CategoryRepository;
+import depth.main_project.PayKids_Server.domain.auth.TokenService;
 import depth.main_project.PayKids_Server.domain.user.entity.User;
 import depth.main_project.PayKids_Server.domain.user.repository.UserRepository;
 import depth.main_project.PayKids_Server.global.exception.ErrorCode;
 import depth.main_project.PayKids_Server.global.exception.MapperException;
-import depth.main_project.PayKids_Server.global.token.TokenService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,7 @@ public class ExpenseService {
 
     //월별 소비 총 금액 조회
     public int getMonthlyExpenseAmount(int year, int month, String token){
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userId = tokenService.getUserUuidFromToken(token);
         int totalAmount = 0;
 
         if (tokenService.expiredToken(token) == false){
@@ -47,7 +47,7 @@ public class ExpenseService {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         List<AllowanceChart> allowanceChartList = allowanceChartRepository.findAllByUserAndAllowanceType(user, AllowanceType.EXPENSE);
@@ -67,7 +67,7 @@ public class ExpenseService {
 
     //지정한 월에 일별로 지출 금액만 데이터 제공
     public List<AllowanceChartAmountDTO> getAllDailyExpenseAmount(int year, int month, String token){
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userId = tokenService.getUserUuidFromToken(token);
         List<Integer> amountList = new ArrayList<>();
         List<AllowanceChartAmountDTO> allowanceChartAmountDTOList = new ArrayList<>();
         YearMonth yearMonth = YearMonth.of(year, month);
@@ -85,7 +85,7 @@ public class ExpenseService {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         List<AllowanceChart> allowanceChartList = allowanceChartRepository.findAllByUserAndAllowanceType(user, AllowanceType.EXPENSE);
@@ -119,7 +119,7 @@ public class ExpenseService {
 
     //월, 카테고리별 소비 확인
     public List<AllowanceChartCategoryDTO> getMonthlyCategoriesExpense(int year, int month, String token){
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userId = tokenService.getUserUuidFromToken(token);
         double totalAmount = 0;
         List<AllowanceChartCategoryDTO> allowanceChartCategoryDTOList = new ArrayList<>();
 
@@ -138,7 +138,7 @@ public class ExpenseService {
             amountList.add(0);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         List<AllowanceChart> allowanceChartList = allowanceChartRepository.findAllByUserAndAllowanceType(user, AllowanceType.EXPENSE);
@@ -211,7 +211,7 @@ public class ExpenseService {
 
     //날짜 별 소비 내역 제공
     public List<AllowanceChartDTO> getDailyExpense(int year, int month, int day, String token){
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userId = tokenService.getUserUuidFromToken(token);
         List<AllowanceChartDTO> allowanceChartDTOList = new ArrayList<>();
 
         if (tokenService.expiredToken(token) == false){
@@ -222,7 +222,7 @@ public class ExpenseService {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         List<AllowanceChart> allowanceChartList = allowanceChartRepository.findAllByUserAndAllowanceType(user, AllowanceType.EXPENSE);
@@ -255,7 +255,7 @@ public class ExpenseService {
 
     //월, 특정 카테고리 소비 내역 조회
     public List<AllowanceChartDTO> getMonthlyCategoryExpense(int year, int month, String token, String category){
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userId = tokenService.getUserUuidFromToken(token);
         List<AllowanceChartDTO> allowanceChartDTOList = new ArrayList<>();
         category = category.replaceAll("\\s", "");
 
@@ -267,7 +267,7 @@ public class ExpenseService {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         List<AllowanceChart> allowanceChartList = allowanceChartRepository.findAllByUserAndAllowanceType(user, AllowanceType.EXPENSE);
@@ -301,7 +301,7 @@ public class ExpenseService {
     //소비 내역 저장 메서드
     @Transactional
     public Boolean saveExpense(int year, int month, int day, int amount, String category, String memo, String token){
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userId = tokenService.getUserUuidFromToken(token);
 
         if (tokenService.expiredToken(token) == false){
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
@@ -311,7 +311,7 @@ public class ExpenseService {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         Optional<Category> categoryEntity = categoryRepository.findByUserAndAllowanceTypeAndTitle(user, AllowanceType.EXPENSE, category);
@@ -337,7 +337,7 @@ public class ExpenseService {
     //소비 내역 삭제
     @Transactional
     public Boolean deleteExpense (Long id, String token){
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userId = tokenService.getUserUuidFromToken(token);
 
         if (tokenService.expiredToken(token) == false){
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
@@ -347,7 +347,7 @@ public class ExpenseService {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         Optional<AllowanceChart> allowanceChart = allowanceChartRepository.findByIdAndUserAndAllowanceType(id, user, AllowanceType.EXPENSE);
@@ -364,7 +364,7 @@ public class ExpenseService {
     //소비내역 수정
     @Transactional
     public Boolean modifyExpense (Long id, int year, int month, int day, int amount, String category, String memo, String token){
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userId = tokenService.getUserUuidFromToken(token);
 
         if (tokenService.expiredToken(token) == false){
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
@@ -374,7 +374,7 @@ public class ExpenseService {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         Optional<AllowanceChart> allowanceChart = allowanceChartRepository.findByIdAndUserAndAllowanceType(id, user, AllowanceType.EXPENSE);

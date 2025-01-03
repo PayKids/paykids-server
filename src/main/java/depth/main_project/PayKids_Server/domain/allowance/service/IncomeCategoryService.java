@@ -6,11 +6,11 @@ import depth.main_project.PayKids_Server.domain.allowance.entity.AllowanceType;
 import depth.main_project.PayKids_Server.domain.allowance.entity.Category;
 import depth.main_project.PayKids_Server.domain.allowance.repository.AllowanceChartRepository;
 import depth.main_project.PayKids_Server.domain.allowance.repository.CategoryRepository;
+import depth.main_project.PayKids_Server.domain.auth.TokenService;
 import depth.main_project.PayKids_Server.domain.user.entity.User;
 import depth.main_project.PayKids_Server.domain.user.repository.UserRepository;
 import depth.main_project.PayKids_Server.global.exception.ErrorCode;
 import depth.main_project.PayKids_Server.global.exception.MapperException;
-import depth.main_project.PayKids_Server.global.token.TokenService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class IncomeCategoryService {
 
     //수입 카테고리 전부 조회
     public List<CategoryDTO> getIncomeAllCategory(String token) {
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userId = tokenService.getUserUuidFromToken(token);
         List<CategoryDTO> categoryDTOList = new ArrayList<>();
 
         if (tokenService.expiredToken(token) == false){
@@ -40,7 +40,7 @@ public class IncomeCategoryService {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         List<Category> categoryList = categoryRepository.findAllByUserAndAllowanceType(user, AllowanceType.INCOME);
@@ -64,7 +64,7 @@ public class IncomeCategoryService {
 
     //이미 존재하는 카테고리인지 확인
     public Boolean isExistIncomeCategory(String token, String categoryName) {
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userId = tokenService.getUserUuidFromToken(token);
         categoryName = categoryName.replaceAll("\\s", "");
 
         if (tokenService.expiredToken(token) == false){
@@ -75,7 +75,7 @@ public class IncomeCategoryService {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         List<Category> categoryList = categoryRepository.findAllByUserAndAllowanceType(user, AllowanceType.INCOME);
@@ -107,7 +107,7 @@ public class IncomeCategoryService {
     //수입 카테고리 저장 로직
     @Transactional
     public Boolean saveIncomeCategory(String token, String name) {
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userId = tokenService.getUserUuidFromToken(token);
         name = name.replaceAll("\\s", "");
 
         if (tokenService.expiredToken(token) == false){
@@ -118,7 +118,7 @@ public class IncomeCategoryService {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         Category category = Category.builder()
@@ -141,7 +141,7 @@ public class IncomeCategoryService {
             throw new MapperException(ErrorCode.CATEGORY_ERROR);
         }
 
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userId = tokenService.getUserUuidFromToken(token);
 
         if (tokenService.expiredToken(token) == false){
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
@@ -151,7 +151,7 @@ public class IncomeCategoryService {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         Optional<Category> category = categoryRepository.findByUserAndAllowanceTypeAndTitle(user, AllowanceType.INCOME, name);

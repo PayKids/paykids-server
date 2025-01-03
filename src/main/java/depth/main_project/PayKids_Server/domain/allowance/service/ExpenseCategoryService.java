@@ -6,11 +6,11 @@ import depth.main_project.PayKids_Server.domain.allowance.entity.AllowanceType;
 import depth.main_project.PayKids_Server.domain.allowance.entity.Category;
 import depth.main_project.PayKids_Server.domain.allowance.repository.AllowanceChartRepository;
 import depth.main_project.PayKids_Server.domain.allowance.repository.CategoryRepository;
+import depth.main_project.PayKids_Server.domain.auth.TokenService;
 import depth.main_project.PayKids_Server.domain.user.entity.User;
 import depth.main_project.PayKids_Server.domain.user.repository.UserRepository;
 import depth.main_project.PayKids_Server.global.exception.ErrorCode;
 import depth.main_project.PayKids_Server.global.exception.MapperException;
-import depth.main_project.PayKids_Server.global.token.TokenService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class ExpenseCategoryService {
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         }
 
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userId = tokenService.getUserUuidFromToken(token);
         List<CategoryDTO> categoryDTOList = new ArrayList<>();
 
 
@@ -41,7 +41,7 @@ public class ExpenseCategoryService {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         List<Category> categoryList = categoryRepository.findAllByUserAndAllowanceType(user, AllowanceType.EXPENSE);
@@ -69,14 +69,14 @@ public class ExpenseCategoryService {
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         }
 
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userId = tokenService.getUserUuidFromToken(token);
         categoryName = categoryName.replaceAll("\\s", "");
 
         if (userId == null) {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         List<Category> categoryList = categoryRepository.findAllByUserAndAllowanceType(user, AllowanceType.EXPENSE);
@@ -112,14 +112,14 @@ public class ExpenseCategoryService {
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         }
 
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userId = tokenService.getUserUuidFromToken(token);
         name = name.replaceAll("\\s", "");
 
         if (userId == null) {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         Category category = Category.builder()
@@ -146,13 +146,13 @@ public class ExpenseCategoryService {
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         }
 
-        Long userId = tokenService.getUserIdFromToken(token);
+        String userId = tokenService.getUserUuidFromToken(token);
 
         if (userId == null) {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         Optional<Category> category = categoryRepository.findByUserAndAllowanceTypeAndTitle(user, AllowanceType.EXPENSE, name);
