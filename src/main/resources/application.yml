@@ -58,7 +58,3 @@ cloud:
       static: ${AWS_REGION}
     s3:
       bucket: ${AWS_S3_BUCKETNAME}
-    stack:
-      auto: false
-
-
