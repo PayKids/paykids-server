@@ -53,23 +53,6 @@ public class UserService {
         return "Nickname changed successfully";
     }
 
-    public String changeEmail(String uuid, String newEmail) {
-        User user = userRepository.findByUuid(uuid)
-                .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
-
-        if (userRepository.existsByEmail(newEmail)) {
-            throw new MapperException(ErrorCode.EMAIL_ALREADY_EXISTS);
-        }
-        if (user.getEmail().equals(newEmail)) {
-            throw new MapperException(ErrorCode.SAME_EMAIL);
-        }
-
-        user.setEmail(newEmail);
-        userRepository.save(user);
-        return "Email changed successfully";
-    }
-
-
     public String changeProfileImage(String uuid, MultipartFile file) {
         User user = userRepository.findByUuid(uuid)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));

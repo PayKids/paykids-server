@@ -26,7 +26,7 @@ public class TokenService {
     @Value(value = "${jwt.secretKey}")
     private String SECRET_KEY;
 
-    private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 30; // 30분
+    private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 60 * 12; // 12시간
     private static final long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24 * 7; // 7일
 
     public String generateAccessToken(String UUID) {

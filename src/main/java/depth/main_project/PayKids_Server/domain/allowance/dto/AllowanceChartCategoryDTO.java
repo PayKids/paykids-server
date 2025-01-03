@@ -12,11 +12,9 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
-public class AllowanceChartDTO {
-    private Long id;
-    private LocalDate date;
+public class AllowanceChartCategoryDTO {
     private AllowanceType allowanceType;
     private String category;
+    private String percent;
     private int amount;
-    private String memo;
 }

@@ -60,20 +60,6 @@ public class UserController {
         return ApiResult.ok(result);
     }
 
-    @Operation(summary = "이메일변경", description = "이메일을 변경")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공적으로 확인됨"),
-            @ApiResponse(responseCode = "400", description = "잘못된 입력 값"),
-            @ApiResponse(responseCode = "500", description = "서버 오류 발생")
-    })
-    @PostMapping("/email/change")
-    public ApiResult<String> changeEmail(@RequestHeader("Authorization") String accessToken,
-                                         @RequestParam String newEmail) {
-        String userUUID = tokenService.getUserUuidFromToken(accessToken);
-        String result = userService.changeEmail(userUUID, newEmail);
-        return ApiResult.ok(result);
-    }
-
     @Operation(summary = "프로필 사진 변경", description = "프로필 사진 변경")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 확인됨"),

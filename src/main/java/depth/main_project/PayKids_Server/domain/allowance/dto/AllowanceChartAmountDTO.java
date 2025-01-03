@@ -12,11 +12,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
-public class AllowanceChartDTO {
-    private Long id;
+public class AllowanceChartAmountDTO {
     private LocalDate date;
-    private AllowanceType allowanceType;
-    private String category;
     private int amount;
-    private String memo;
+    private AllowanceType allowanceType;
 }

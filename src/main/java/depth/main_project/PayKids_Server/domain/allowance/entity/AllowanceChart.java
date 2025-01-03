@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Entity
@@ -19,7 +18,8 @@ public class AllowanceChart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDateTime date;
+    private LocalDate date;
+    private int amount;
     private AllowanceType allowanceType;
 
     @Column(nullable = true)
@@ -34,9 +34,10 @@ public class AllowanceChart {
     private Category category;
 
     @Builder
-    public AllowanceChart(LocalDateTime date, AllowanceType allowanceType, String memo, User user, Category category) {
+    public AllowanceChart(LocalDate date, AllowanceType allowanceType, int amount, String memo, User user, Category category) {
         this.date = date;
         this.allowanceType = allowanceType;
+        this.amount = amount;
         this.memo = memo;
         this.user = user;
         this.category = category;
