@@ -12,6 +12,11 @@ spring:
     password: ${DB_PASSWORD} #[DB_PASSWORD]
     driver-class-name: com.mysql.cj.jdbc.Driver #[JDBC DRIVER]
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
 server:
   address: 0.0.0.0  # 모든 네트워크 인터페이스에서 요청을 수락하도록 설정
   port: 8080       # 포트 설정 (기본값이 8080)
@@ -43,3 +48,17 @@ gpt:
 
 jwt:
   secretKey: ${JWT_SECRET}
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ${AWS_REGION}
+    s3:
+      bucket: ${AWS_S3_BUCKETNAME}
+    stack:
+      auto: false
+
+
