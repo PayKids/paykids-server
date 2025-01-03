@@ -8,26 +8,34 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import depth.main_project.PayKids_Server.domain.user.dto.UserDTO;
+import depth.main_project.PayKids_Server.global.exception.ErrorCode;
+import depth.main_project.PayKids_Server.global.exception.MapperException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.net.URL;
 import java.security.interfaces.RSAPublicKey;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class KakaoTokenValidator {
-
-    private static final String KAKAO_JWK_URL = "https://kauth.kakao.com/.well-known/jwks.json";
+    JwkProvider jwkProvider;
 
     public UserDTO validateAndExtract(String idToken) {
-        // JWK 가져오기
-        JwkProvider jwkProvider = new UrlJwkProvider(KAKAO_JWK_URL);
+        try {
+            jwkProvider = new UrlJwkProvider(new URL("https://kauth.kakao.com/.well-known/jwks.json"));
+        } catch (Exception e) {
+            throw new MapperException(ErrorCode.TOKEN_INVALID);
+        }
 
         try {
             DecodedJWT decodedJWT = JWT.decode(idToken);
-            Jwk jwk = jwkProvider.get(decodedJWT.getKeyId());
 
+            Jwk jwk = jwkProvider.get(decodedJWT.getKeyId());
             Algorithm algorithm = Algorithm.RSA256((RSAPublicKey) jwk.getPublicKey(), null);
+
             JWTVerifier verifier = JWT.require(algorithm).build();
             verifier.verify(idToken);
 
@@ -37,7 +45,7 @@ public class KakaoTokenValidator {
 
             return new UserDTO(email, nickname, profileImageURL);
         } catch (Exception e) {
-            throw new RuntimeException("ID Token is invalid");
+            throw new MapperException(ErrorCode.TOKEN_INVALID);
         }
     }
 }
