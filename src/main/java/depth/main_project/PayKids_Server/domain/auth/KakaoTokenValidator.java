@@ -39,11 +39,11 @@ public class KakaoTokenValidator {
             JWTVerifier verifier = JWT.require(algorithm).build();
             verifier.verify(idToken);
 
-            String email = decodedJWT.getClaim("email").asString();
             String nickname = decodedJWT.getClaim("nickname").asString();
+            String email = decodedJWT.getClaim("email").asString();
             String profileImageURL = decodedJWT.getClaim("profile_image").asString();
 
-            return new UserDTO(email, nickname, profileImageURL);
+            return new UserDTO(nickname, email, profileImageURL);
         } catch (Exception e) {
             throw new MapperException(ErrorCode.TOKEN_INVALID);
         }
