@@ -21,6 +21,9 @@ public enum ErrorCode {
     FILE_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3 파일 삭제 실패"),
     PREVIOUS_IMAGE_NOT_FOUND( HttpStatus.BAD_REQUEST, "Previous image not found"),
     STAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "Stage not found"),
+    TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "ID Token is invalid"),
+    NICKNAME_TOO_LONG(HttpStatus.BAD_REQUEST, "Nickname의 글자수는 최대 8글자"),
+    INVALID_NICKNAME(HttpStatus.BAD_REQUEST, "Nickname is invalid(닉네임이 공백인 경우)"),
     QUIZ_NOT_FOUND(HttpStatus.NOT_FOUND, "Quiz not found"),
     TOKEN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "토큰 해석 문제가 발생했습니다"),
     TOKEN_EXPIRED_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "토큰 유효기간이 만료되었습니다");
