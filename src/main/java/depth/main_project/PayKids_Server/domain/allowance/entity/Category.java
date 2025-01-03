@@ -15,7 +15,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
+    private String title = "기타";
     private AllowanceType allowanceType;
 
     @ManyToOne (fetch = FetchType.LAZY)
