@@ -43,8 +43,7 @@ public class AuthController {
         if (!tokenService.expiredToken(refreshToken)) {
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         }
-
         String newAccessToken = tokenService.generateAccessToken(UserUUID);
-        return ApiResult.ok(new LoginResponse(newAccessToken, refreshToken));
+        return ApiResult.ok(new LoginResponse(newAccessToken, refreshToken, "Bearer", true));
     }
 }

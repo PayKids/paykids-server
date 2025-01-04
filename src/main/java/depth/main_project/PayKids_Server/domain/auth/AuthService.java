@@ -35,8 +35,9 @@ public class AuthService {
         String accessToken = tokenService.generateAccessToken(user.getUuid());
         String refreshToken = tokenService.generateRefreshToken(user.getUuid());
 
-        // 4. Access Token, Refresh Token 반환
-        return new LoginResponse(accessToken, refreshToken);
+        boolean isRegistered = user.getNickname() != null;
+
+        return new LoginResponse( accessToken, refreshToken, "Bearer", isRegistered );
     }
 
     private User registerNewUser(UserDTO userDTO) {
