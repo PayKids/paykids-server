@@ -40,7 +40,7 @@ public class AuthController {
         String UserUUID = tokenService.getUserUuidFromToken(refreshToken);
 
         // Refresh Token 검증 및 사용자 정보 확인
-        if (tokenService.expiredToken(refreshToken)) {
+        if (!tokenService.expiredToken(refreshToken)) {
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         }
 
