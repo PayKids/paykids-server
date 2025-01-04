@@ -25,7 +25,7 @@ public class UserService {
     }
 
     public String saveNickname(String uuid, String nickname) {
-        if (nickname.codePointCount(0, nickname.length()) > 9) {
+        if (nickname.codePointCount(0, nickname.length()) > 8) {
             throw new MapperException(ErrorCode.NICKNAME_TOO_LONG); // 닉네임 길이 초과
         }
 
@@ -35,6 +35,10 @@ public class UserService {
 
         User user = userRepository.findByUuid(uuid)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
+
+        if (userRepository.existsByNickname(nickname)) {
+            throw new MapperException(ErrorCode.SAME_NICKNAME); // 다른 유저와의 닉네임 중복 확인
+        }
 
         if (user.getNickname() != null) {
             throw new MapperException(ErrorCode.NICKNAME_ALREADY_EXISTS);
@@ -47,8 +51,8 @@ public class UserService {
     }
 
     public String changeNickname(String uuid, String newNickname) {
-        if (newNickname.codePointCount(0, newNickname.length()) > 9) {
-            throw new MapperException(ErrorCode.NICKNAME_TOO_LONG); // 닉네임 길이 초과
+        if (newNickname.codePointCount(0, newNickname.length()) > 8) {
+            throw new MapperException(ErrorCode.NICKNAME_TOO_LONG);
         }
 
         if (newNickname == null || newNickname.trim().isEmpty()) {
@@ -58,12 +62,11 @@ public class UserService {
         User user = userRepository.findByUuid(uuid)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
-
-        if (user.getNickname().equals(newNickname)) {
+        if (userRepository.existsByNickname(newNickname)) {
             throw new MapperException(ErrorCode.SAME_NICKNAME);
         }
 
-        user.setNickname(newNickname); // 닉네임 변경
+        user.setNickname(newNickname);
         userRepository.save(user);
 
         return "Nickname changed successfully";
