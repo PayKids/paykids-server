@@ -28,7 +28,7 @@ public class AuthService {
         UserDTO userDTO = kakaoTokenValidator.validateAndExtract(idToken);
 
         // 2. 사용자 존재 여부 확인
-        User user = userRepository.findByEmail(userDTO.getEmail())
+        User user = userRepository.findByKakaoId(userDTO.getSub())
                 .orElseGet(() -> registerNewUser(userDTO)); // 존재하지 않으면 회원가입
 
         // 3. Access Token 및 Refresh Token 생성
@@ -46,6 +46,7 @@ public class AuthService {
         }
 
         User newUser = User.builder()
+                .kakaoId(userDTO.getSub())
                 .email(userDTO.getEmail())
                 .username(userDTO.getNickname())
                 .profileImageURL(profileImageURL)

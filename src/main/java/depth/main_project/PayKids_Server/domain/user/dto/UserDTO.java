@@ -9,6 +9,7 @@ import lombok.Getter;
 @Builder
 public class UserDTO {
     private Long id;
+    private String sub;
     private String username;
     private String uuid;
     private String nickname;
@@ -16,7 +17,8 @@ public class UserDTO {
     private String profileImageURL;
     private Integer stageStatus;
 
-    public UserDTO(String nickname, String email, String profileImageURL) {
+    public UserDTO(String sub, String nickname, String email, String profileImageURL) {
+        this.sub = sub;
         this.nickname = nickname;
         this.email = email;
         this.profileImageURL = profileImageURL;

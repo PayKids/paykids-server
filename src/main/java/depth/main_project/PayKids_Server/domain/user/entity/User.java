@@ -18,6 +18,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, unique = true)
+    private String kakaoId;
     private String username;
 
     @Column(nullable = false, unique = true, updatable = false)
@@ -34,7 +37,8 @@ public class User {
     private Integer stageStatus = 1;
 
     @Builder
-    public User(String username, String nickname, String email, String profileImageURL) {
+    public User(String kakaoId,  String username, String nickname, String email, String profileImageURL) {
+        this.kakaoId = kakaoId;
         this.username = username;
         this.nickname = nickname;
         this.email = email;

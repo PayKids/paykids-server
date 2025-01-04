@@ -21,7 +21,7 @@ public class UserService {
         User user = userRepository.findByUuid(uuid)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
-        return new UserDTO(user.getId(), user.getUsername(), user.getUuid(), user.getNickname(), user.getEmail(), user.getProfileImageURL(), user.getStageStatus());
+        return new UserDTO(user.getId(), user.getKakaoId(), user.getUsername(), user.getUuid(), user.getNickname(), user.getEmail(), user.getProfileImageURL(), user.getStageStatus());
     }
 
     public String saveNickname(String uuid, String nickname) {
