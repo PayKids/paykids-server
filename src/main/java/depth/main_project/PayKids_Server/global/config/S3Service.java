@@ -3,19 +3,16 @@ package depth.main_project.PayKids_Server.global.config;
 import depth.main_project.PayKids_Server.global.exception.ErrorCode;
 import depth.main_project.PayKids_Server.global.exception.MapperException;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +35,9 @@ public class S3Service {
 
 
         try {
-            Path tempFile = Files.createTempFile("temp-", uniqueFileName);
+            String tempFileName = uniqueFileName.replace("/", "_");
+            Path tempFile = Files.createTempFile("temp-", tempFileName);
+
             Files.copy(file.getInputStream(), tempFile, StandardCopyOption.REPLACE_EXISTING);
 
             s3Client.putObject(
