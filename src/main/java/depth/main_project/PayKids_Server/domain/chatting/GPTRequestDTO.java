@@ -13,7 +13,7 @@ public class GPTRequestDTO {
     public GPTRequestDTO(String model, String prompt) {
         this.model = model;
         this.messages =  new ArrayList<>();
-        String modifiedPrompt = "다음 질문에 대해 초등학교 저학년이 이해하기 쉽게 답변해주세요:\n" + prompt;
+        String modifiedPrompt = "다음 질문에 대해 초등학교 저학년이 이해하기 쉽게 답변해주세요, 만약 금융과 관련된 질문이 아니면 답을 하지 말아주세요: \n" + prompt;
         this.messages.add(new MessageDTO("user", modifiedPrompt));
     }
 }
