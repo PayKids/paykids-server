@@ -22,6 +22,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String kakaoId;
     private String username;
+    private int gptNumber = 0;
 
     @Column(nullable = false, unique = true, updatable = false)
     private String uuid = UUID.randomUUID().toString(); // UUID 자동 생성
