@@ -73,6 +73,6 @@ public class UserController {
         String userUUID = tokenService.getUserUuidFromToken(accessToken);
         String result = userService.changeProfileImage(userUUID, file);
 
-        return ApiResult.ok(result);
+        return ApiResult.ok(result, "");
     }
 }
