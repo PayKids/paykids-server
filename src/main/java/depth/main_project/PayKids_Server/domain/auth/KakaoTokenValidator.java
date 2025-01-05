@@ -42,7 +42,11 @@ public class KakaoTokenValidator {
             String sub = decodedJWT.getClaim("sub").asString();
             String nickname = decodedJWT.getClaim("nickname").asString();
             String email = decodedJWT.getClaim("email").asString();
-            String profileImageURL = decodedJWT.getClaim("profile_image").asString();
+            String profileImageURL = decodedJWT.getClaim("picture").asString();
+
+            if (profileImageURL != null && profileImageURL.contains("t1.kakaocdn.net/account_images/default_profile.jpeg")) {
+                profileImageURL = "https://paykidsimage.s3.ap-northeast-2.amazonaws.com/paykidsbasicprofile.png";
+            }
 
             return new UserDTO(sub, nickname, email, profileImageURL);
         } catch (Exception e) {

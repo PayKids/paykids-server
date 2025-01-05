@@ -42,8 +42,8 @@ public class UserController {
     public ApiResult<String> saveNickname(@RequestHeader("Authorization") String accessToken,
                                           @RequestParam String nickname) {
         String userUUID = tokenService.getUserUuidFromToken(accessToken);
-        String result = userService.saveNickname(userUUID, nickname);
-        return ApiResult.ok(result);
+        userService.saveNickname(userUUID, nickname);
+        return ApiResult.ok("Nickname changed successfully", "");
     }
 
     @Operation(summary = "닉네임 변경", description = "닉네임 변경")
@@ -56,8 +56,8 @@ public class UserController {
     public ApiResult<String> changeNickname(@RequestHeader("Authorization") String accessToken,
                                             @RequestParam String newNickname) {
         String userUUID = tokenService.getUserUuidFromToken(accessToken);
-        String result = userService.changeNickname(userUUID, newNickname);
-        return ApiResult.ok(result);
+        userService.changeNickname(userUUID, newNickname);
+        return ApiResult.ok("Nickname changed successfully","");
     }
 
     @Operation(summary = "프로필 사진 변경", description = "프로필 사진 변경")
@@ -73,6 +73,6 @@ public class UserController {
         String userUUID = tokenService.getUserUuidFromToken(accessToken);
         String result = userService.changeProfileImage(userUUID, file);
 
-        return ApiResult.ok(result);
+        return ApiResult.ok(result, "");
     }
 }

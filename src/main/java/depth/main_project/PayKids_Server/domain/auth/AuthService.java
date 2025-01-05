@@ -21,8 +21,6 @@ public class AuthService {
     private final CategoryRepository categoryRepository;
     private final TokenService tokenService;
 
-    private static final String DEFAULT_PROFILE_IMAGE_URL = "https://paykidsimage.s3.ap-northeast-2.amazonaws.com/profile-image/paykidsbasicprofile.png";
-
     public LoginResponse signupOrLogin(String idToken) {
         // 1. ID 토큰 검증 및 사용자 정보 추출
         UserDTO userDTO = kakaoTokenValidator.validateAndExtract(idToken);
@@ -41,16 +39,11 @@ public class AuthService {
     }
 
     private User registerNewUser(UserDTO userDTO) {
-        String profileImageURL = userDTO.getProfileImageURL();
-        if (profileImageURL == null || profileImageURL.trim().isEmpty()) {
-            profileImageURL = DEFAULT_PROFILE_IMAGE_URL; // 기본 이미지 설정
-        }
-
         User newUser = User.builder()
                 .kakaoId(userDTO.getSub())
                 .email(userDTO.getEmail())
                 .username(userDTO.getNickname())
-                .profileImageURL(profileImageURL)
+                .profileImageURL(userDTO.getProfileImageURL())
                 .build();
 
         Category incomeCategory = Category.builder()
