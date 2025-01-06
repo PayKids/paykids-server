@@ -27,7 +27,7 @@ public class IncomeAllowanceController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/month-total-amount")
-    public ApiResult<Integer> getMonthTotalIncomeAmount(@RequestParam Integer year, @RequestParam Integer month, @RequestParam String token) {
+    public ApiResult<Integer> getMonthTotalIncomeAmount(@RequestParam Integer year, @RequestParam Integer month, @RequestHeader("Authorization") String token) {
         return ApiResult.ok(incomeService.getMonthlyIncomeAmount(year, month, token));
     }
 
@@ -38,7 +38,7 @@ public class IncomeAllowanceController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/month-daily-amount")
-    public ApiResult<List<AllowanceChartAmountDTO>> getMonthDailyIncomeAmount(@RequestParam Integer year, @RequestParam Integer month, @RequestParam String token) {
+    public ApiResult<List<AllowanceChartAmountDTO>> getMonthDailyIncomeAmount(@RequestParam Integer year, @RequestParam Integer month, @RequestHeader("Authorization") String token) {
         return ApiResult.ok(incomeService.getAllDailyIncomeAmount(year, month, token));
     }
 
@@ -49,7 +49,7 @@ public class IncomeAllowanceController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/month-all-category")
-    public ApiResult<List<AllowanceChartCategoryDTO>> getMonthAllCategoryIncome(@RequestParam Integer year, @RequestParam Integer month, @RequestParam String token) {
+    public ApiResult<List<AllowanceChartCategoryDTO>> getMonthAllCategoryIncome(@RequestParam Integer year, @RequestParam Integer month, @RequestHeader("Authorization") String token) {
         return ApiResult.ok(incomeService.getMonthlyCategoriesIncome(year, month, token));
     }
 
@@ -60,7 +60,7 @@ public class IncomeAllowanceController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/day")
-    public ApiResult<List<AllowanceChartDTO>> getDailyIncomeAmount(@RequestParam LocalDate localDate, @RequestParam String token) {
+    public ApiResult<List<AllowanceChartDTO>> getDailyIncomeAmount(@RequestParam LocalDate localDate, @RequestHeader("Authorization") String token) {
         return ApiResult.ok(incomeService.getDailyIncome(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth(), token));
     }
 
@@ -71,7 +71,7 @@ public class IncomeAllowanceController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/month-category")
-    public ApiResult<List<AllowanceChartDTO>> getMonthCategoryIncome(@RequestParam Integer year, @RequestParam Integer month, @RequestParam String token, @RequestParam String category){
+    public ApiResult<List<AllowanceChartDTO>> getMonthCategoryIncome(@RequestParam Integer year, @RequestParam Integer month, @RequestHeader("Authorization") String token, @RequestParam String category){
         return ApiResult.ok(incomeService.getMonthlyCategoryIncome(year, month, token, category));
     }
 
@@ -82,7 +82,7 @@ public class IncomeAllowanceController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @PostMapping("/save")
-    public ApiResult<Boolean> saveIncome(@RequestBody AllowanceChartDTO allowanceChartDTO, @RequestParam String token) {
+    public ApiResult<Boolean> saveIncome(@RequestBody AllowanceChartDTO allowanceChartDTO, @RequestHeader("Authorization") String token) {
         return ApiResult.ok(incomeService.saveIncome(
                 allowanceChartDTO.getDate().getYear(),
                 allowanceChartDTO.getDate().getMonthValue(),
@@ -100,7 +100,7 @@ public class IncomeAllowanceController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @DeleteMapping("/delete")
-    public ApiResult<Boolean> deleteIncome(@RequestParam Long id, @RequestParam String token) {
+    public ApiResult<Boolean> deleteIncome(@RequestParam Long id, @RequestHeader("Authorization") String token) {
         return ApiResult.ok(incomeService.deleteIncome(id, token));
     }
 
@@ -111,7 +111,7 @@ public class IncomeAllowanceController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @PostMapping("/replace")
-    public ApiResult<Boolean> replaceIncome(@RequestBody AllowanceChartDTO allowanceChartDTO, @RequestParam String token){
+    public ApiResult<Boolean> replaceIncome(@RequestBody AllowanceChartDTO allowanceChartDTO, @RequestHeader("Authorization") String token){
         return ApiResult.ok(incomeService.modifyIncome(
                 allowanceChartDTO.getId(),
                 allowanceChartDTO.getDate().getYear(),

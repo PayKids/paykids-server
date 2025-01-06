@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MapperException.class)
     public ResponseEntity<ApiResult<String>> handleMapperException(MapperException exception) {
         ErrorCode errorCode = exception.getErrorCode();
-        ApiResult<String> apiResult = ApiResult.withError(errorCode, errorCode.getMessage());
+        ApiResult<String> apiResult = ApiResult.withError(errorCode, null);
         return new ResponseEntity<>(apiResult, errorCode.getHttpStatus());
     }
 

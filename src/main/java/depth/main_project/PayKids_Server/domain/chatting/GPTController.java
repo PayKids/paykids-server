@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
@@ -29,7 +26,7 @@ public class GPTController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/chat")
-    public ResponseEntity<Map<String, String>> chat(@RequestParam String prompt, @RequestParam String token) {
+    public ResponseEntity<Map<String, String>> chat(@RequestParam String prompt, @RequestHeader("Auth") String token) {
 
         return ResponseEntity.ok(gptService.getChatting(prompt, token));
     }
@@ -41,7 +38,7 @@ public class GPTController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/number")
-    public ResponseEntity<Integer> getGPTNumber(@RequestParam String token) {
+    public ResponseEntity<Integer> getGPTNumber(@RequestHeader("Auth") String token) {
         return ResponseEntity.ok(gptService.getGPTNumber(token));
     }
 }

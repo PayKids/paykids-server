@@ -24,7 +24,7 @@ public class IncomeCategoryController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/category-list")
-    public ApiResult<List<CategoryDTO>> getAllIncomeCategory(@RequestParam String token) {
+    public ApiResult<List<CategoryDTO>> getAllIncomeCategory(@RequestHeader("Auth") String token) {
         return ApiResult.ok(incomeCategoryService.getIncomeAllCategory(token));
     }
 
@@ -35,7 +35,7 @@ public class IncomeCategoryController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @PostMapping("/save-category")
-    public ApiResult<Boolean> saveIncomeCategory(@RequestParam String category, @RequestParam String token) {
+    public ApiResult<Boolean> saveIncomeCategory(@RequestParam String category, @RequestHeader("Authorization") String token) {
         if (incomeCategoryService.isLongCategory(category) == false){
             if (incomeCategoryService.isExistIncomeCategory(token, category) == false){
                 return ApiResult.ok(incomeCategoryService.saveIncomeCategory(token, category));
@@ -52,7 +52,7 @@ public class IncomeCategoryController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @DeleteMapping("/delete-category")
-    public ApiResult<Boolean> deleteIncomeCategory(@RequestParam String category, @RequestParam String token) {
+    public ApiResult<Boolean> deleteIncomeCategory(@RequestParam String category, @RequestHeader("Authorization") String token) {
         return ApiResult.ok(incomeCategoryService.deleteIncomeCategory(token, category));
     }
 }

@@ -38,7 +38,7 @@ public class QuizController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/stage-to-go")
-    public ApiResult<Integer> getStageNumber(@RequestParam String token){
+    public ApiResult<Integer> getStageNumber(@RequestHeader("Authorization") String token){
         return ApiResult.ok(quizService.getUserStageStatus(token));
     }
 
@@ -60,7 +60,7 @@ public class QuizController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/incorrect-list")
-    public ApiResult<List<Integer>> getIncorrectQuizList(@RequestParam String token, @RequestParam int stage){
+    public ApiResult<List<Integer>> getIncorrectQuizList(@RequestHeader("Authorization") String token, @RequestParam int stage){
         if (quizService.isNotYet(stage, token)){
             List<Integer> list = new ArrayList<>();
             list.add(0);
@@ -77,7 +77,7 @@ public class QuizController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/check-answer")
-    public ApiResult<Boolean> checkQuizAnswer(@RequestParam String token, @RequestParam int stage, @RequestParam int number, @RequestParam String answer){
+    public ApiResult<Boolean> checkQuizAnswer(@RequestHeader("Authorization") String token, @RequestParam int stage, @RequestParam int number, @RequestParam String answer){
         return ApiResult.ok(quizService.isQuizAnswerTrue(stage, number, answer, token));
     }
 
@@ -88,7 +88,7 @@ public class QuizController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/check-stage")
-    public ApiResult<QuizClearedDTO> checkStageCleared(@RequestParam int stage, @RequestParam String token){
+    public ApiResult<QuizClearedDTO> checkStageCleared(@RequestParam int stage, @RequestHeader("Authorization") String token){
         //복습인 경우
         if (quizService.isRestudy(stage, token)){
             QuizClearedDTO quizClearedDTO = QuizClearedDTO.builder()
