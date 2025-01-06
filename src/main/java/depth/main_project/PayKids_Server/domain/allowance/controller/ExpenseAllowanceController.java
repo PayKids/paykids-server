@@ -27,7 +27,7 @@ public class ExpenseAllowanceController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/month-total-amount")
-    public ApiResult<Integer> getMonthTotalExpenseAmount(@RequestParam Integer year, @RequestParam Integer month, @RequestParam String token) {
+    public ApiResult<Integer> getMonthTotalExpenseAmount(@RequestParam Integer year, @RequestParam Integer month, @RequestHeader("Authorization") String token) {
         return ApiResult.ok(expenseService.getMonthlyExpenseAmount(year, month, token));
     }
 
@@ -38,7 +38,7 @@ public class ExpenseAllowanceController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/month-daily-amount")
-    public ApiResult<List<AllowanceChartAmountDTO>> getMonthDailyExpenseAmount(@RequestParam Integer year, @RequestParam Integer month, @RequestParam String token) {
+    public ApiResult<List<AllowanceChartAmountDTO>> getMonthDailyExpenseAmount(@RequestParam Integer year, @RequestParam Integer month, @RequestHeader("Authorization") String token) {
         return ApiResult.ok(expenseService.getAllDailyExpenseAmount(year, month, token));
     }
 
@@ -49,7 +49,7 @@ public class ExpenseAllowanceController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/month-all-category")
-    public ApiResult<List<AllowanceChartCategoryDTO>> getMonthAllCategoryExpense(@RequestParam Integer year, @RequestParam Integer month, @RequestParam String token) {
+    public ApiResult<List<AllowanceChartCategoryDTO>> getMonthAllCategoryExpense(@RequestParam Integer year, @RequestParam Integer month, @RequestHeader("Authorization") String token) {
         return ApiResult.ok(expenseService.getMonthlyCategoriesExpense(year, month, token));
     }
 
@@ -60,7 +60,7 @@ public class ExpenseAllowanceController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/month-most-category")
-    public ApiResult<AllowanceChartCategoryDTO> getMonthMostCategoryExpense(@RequestParam Integer year, @RequestParam Integer month, @RequestParam String token) {
+    public ApiResult<AllowanceChartCategoryDTO> getMonthMostCategoryExpense(@RequestParam Integer year, @RequestParam Integer month, @RequestHeader("Authorization") String token) {
         return ApiResult.ok(expenseService.getMostCategoryExpense(year, month, token));
     }
 
@@ -71,7 +71,7 @@ public class ExpenseAllowanceController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/day")
-    public ApiResult<List<AllowanceChartDTO>> getDailyExpenseAmount(@RequestParam LocalDate localDate, @RequestParam String token) {
+    public ApiResult<List<AllowanceChartDTO>> getDailyExpenseAmount(@RequestParam LocalDate localDate, @RequestHeader("Authorization") String token) {
         return ApiResult.ok(expenseService.getDailyExpense(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth(), token));
     }
 
@@ -82,7 +82,7 @@ public class ExpenseAllowanceController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/month-category")
-    public ApiResult<List<AllowanceChartDTO>> getMonthCategoryExpense(@RequestParam Integer year, @RequestParam Integer month, @RequestParam String token, @RequestParam String category){
+    public ApiResult<List<AllowanceChartDTO>> getMonthCategoryExpense(@RequestParam Integer year, @RequestParam Integer month, @RequestHeader("Authorization") String token, @RequestParam String category){
         return ApiResult.ok(expenseService.getMonthlyCategoryExpense(year, month, token, category));
     }
 
@@ -93,7 +93,7 @@ public class ExpenseAllowanceController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @PostMapping("/save")
-    public ApiResult<Boolean> saveExpense(@RequestBody AllowanceChartDTO allowanceChartDTO, @RequestParam String token) {
+    public ApiResult<Boolean> saveExpense(@RequestBody AllowanceChartDTO allowanceChartDTO, @RequestHeader("Authorization") String token) {
         return ApiResult.ok(expenseService.saveExpense(
                 allowanceChartDTO.getDate().getYear(),
                 allowanceChartDTO.getDate().getMonthValue(),
@@ -111,7 +111,7 @@ public class ExpenseAllowanceController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @DeleteMapping("/delete")
-    public ApiResult<Boolean> deleteExpense(@RequestParam Long id, @RequestParam String token) {
+    public ApiResult<Boolean> deleteExpense(@RequestParam Long id, @RequestHeader("Authorization") String token) {
         return ApiResult.ok(expenseService.deleteExpense(id, token));
     }
 
@@ -122,7 +122,7 @@ public class ExpenseAllowanceController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @PostMapping("/replace")
-    public ApiResult<Boolean> replaceExpense(@RequestBody AllowanceChartDTO allowanceChartDTO, @RequestParam String token){
+    public ApiResult<Boolean> replaceExpense(@RequestBody AllowanceChartDTO allowanceChartDTO, @RequestHeader("Authorization") String token){
         return ApiResult.ok(expenseService.modifyExpense(
                 allowanceChartDTO.getId(),
                 allowanceChartDTO.getDate().getYear(),

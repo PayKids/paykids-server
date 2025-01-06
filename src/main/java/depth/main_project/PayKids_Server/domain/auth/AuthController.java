@@ -23,7 +23,7 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @PostMapping("/login")
-    public ApiResult<LoginResponse> signupOrLogin(@RequestParam String idToken) {
+    public ApiResult<LoginResponse> signupOrLogin(@RequestHeader("Authorization") String idToken) {
         LoginResponse response = authService.signupOrLogin(idToken);
         return ApiResult.ok(response);
     }
@@ -36,7 +36,7 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @PostMapping("/refresh")
-    public ApiResult<LoginResponse> refresh(@RequestParam String refreshToken) {
+    public ApiResult<LoginResponse> refresh(@RequestHeader("Authorization") String refreshToken) {
         String UserUUID = tokenService.getUserUuidFromToken(refreshToken);
 
         // Refresh Token 검증 및 사용자 정보 확인

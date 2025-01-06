@@ -24,7 +24,7 @@ public class ExpenseCategoryController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/category-list")
-    public ApiResult<List<CategoryDTO>> getAllExpenseCategory(@RequestParam String token) {
+    public ApiResult<List<CategoryDTO>> getAllExpenseCategory(@RequestHeader("Authorization") String token) {
         return ApiResult.ok(expenseCategoryService.getExpenseAllCategory(token));
     }
 
@@ -35,7 +35,7 @@ public class ExpenseCategoryController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @PostMapping("/save-category")
-    public ApiResult<Boolean> saveExpenseCategory(@RequestParam String category, @RequestParam String token) {
+    public ApiResult<Boolean> saveExpenseCategory(@RequestParam String category, @RequestHeader("Authorization") String token) {
         if (expenseCategoryService.isLongCategory(category) == false){
             if (expenseCategoryService.isExistExpenseCategory(token, category) == false){
                 return ApiResult.ok(expenseCategoryService.saveExpenseCategory(token, category));
@@ -52,7 +52,7 @@ public class ExpenseCategoryController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @DeleteMapping("/delete-category")
-    public ApiResult<Boolean> deleteExpenseCategory(@RequestParam String category, @RequestParam String token) {
+    public ApiResult<Boolean> deleteExpenseCategory(@RequestParam String category, @RequestHeader("Authorization") String token) {
         return ApiResult.ok(expenseCategoryService.deleteExpenseCategory(token, category));
     }
 }
