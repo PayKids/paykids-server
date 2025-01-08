@@ -82,7 +82,7 @@ public class TokenService {
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(SECRET_KEY)
                     .build()
-                    .parseClaimsJws(token)
+                    .parseClaimsJws(token.replace("Bearer", ""))
                     .getBody();
 
             Date expiration = claims.getExpiration();
