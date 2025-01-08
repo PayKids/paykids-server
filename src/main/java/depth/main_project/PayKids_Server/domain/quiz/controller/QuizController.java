@@ -28,7 +28,7 @@ public class QuizController {
     @GetMapping("/stage-name")
     public ApiResult<String> getStageName(@RequestParam int stage){
 
-        return ApiResult.ok(quizService.getStageName(stage));
+        return ApiResult.ok("조회 완료", quizService.getStageName(stage));
     }
 
     @Operation(summary = "진행해야하는 스테이지 조회", description = "진행해야하는 스테이지 번호가 반환됩니다. 이전 번호는 클리어를 의미합니다.")

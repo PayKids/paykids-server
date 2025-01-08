@@ -88,7 +88,7 @@ public class UserService {
         user.setProfileImageURL(newImageUrl);
         userRepository.save(user);
 
-        return newImageUrl;
+        return "Profile Image changed successfully";
     }
 
     private void deletePreviousProfileImage(String previousImageUrl) {
