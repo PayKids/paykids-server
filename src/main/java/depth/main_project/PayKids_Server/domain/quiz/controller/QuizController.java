@@ -81,6 +81,17 @@ public class QuizController {
         return ApiResult.ok(quizService.isQuizAnswerTrue(stage, number, answer, token));
     }
 
+    @Operation(summary = "전체 퀴즈 개수 조회", description = "데이터베이스에 저장되어 있는 전체 퀴즈 개수를 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 확인됨"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 값"),
+            @ApiResponse(responseCode = "500", description = "서버 오류 발생")
+    })
+    @GetMapping("/count")
+    public ApiResult<Integer> countQuiz(){
+        return ApiResult.ok(quizService.getTotalQuizCount());
+    }
+
     @Operation(summary = "스테이지 클리어 여부 조회", description = "스테이지와 토큰을 입력하면 스테이지 클리어 여부를 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 확인됨"),
