@@ -186,6 +186,8 @@ public class ExpenseService {
         int mostCategoryAmount = 0;
         String mostCategoryTitle = "";
 
+        List<AllowanceChartCategoryDTO> mostCategoryCategoryDTOList = new ArrayList<>();
+
         if (allowanceChartCategoryDTOList.isEmpty()) {
             return allowanceChartCategoryDTOList;
         }
@@ -204,9 +206,9 @@ public class ExpenseService {
                 .percent(null)
                 .build();
 
-        allowanceChartCategoryDTOList.add(allowanceChartCategoryDTO);
+        mostCategoryCategoryDTOList.add(allowanceChartCategoryDTO);
 
-        return allowanceChartCategoryDTOList;
+        return mostCategoryCategoryDTOList;
     }
 
     //날짜 별 소비 내역 제공
