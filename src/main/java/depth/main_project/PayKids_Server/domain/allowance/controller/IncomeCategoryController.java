@@ -24,7 +24,7 @@ public class IncomeCategoryController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/category-list")
-    public ApiResult<List<CategoryDTO>> getAllIncomeCategory(@RequestHeader("Auth") String token) {
+    public ApiResult<List<CategoryDTO>> getAllIncomeCategory(@RequestHeader("Authorization") String token) {
         return ApiResult.ok(incomeCategoryService.getIncomeAllCategory(token));
     }
 
