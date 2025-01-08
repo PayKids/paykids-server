@@ -47,7 +47,7 @@ public class ExpenseCategoryService {
         List<Category> categoryList = categoryRepository.findAllByUserAndAllowanceType(user, AllowanceType.EXPENSE);
 
         if (categoryList == null || categoryList.size() == 0) {
-            throw new MapperException(ErrorCode.CATEGORY_NOT_FOUND);
+           return categoryDTOList;
         }
 
         for (Category category : categoryList) {
