@@ -144,7 +144,7 @@ public class ExpenseService {
         List<AllowanceChart> allowanceChartList = allowanceChartRepository.findAllByUserAndAllowanceType(user, AllowanceType.EXPENSE);
 
         if (allowanceChartList.isEmpty()) {
-            throw new MapperException(ErrorCode.ALLOWANCE_NOT_FOUND);
+            return allowanceChartCategoryDTOList;
         }
 
         for (AllowanceChart allowanceChart : allowanceChartList) {
@@ -177,21 +177,17 @@ public class ExpenseService {
             allowanceChartCategoryDTOList.add(allowanceChartCategoryDTO);
         }
 
-        if(allowanceChartCategoryDTOList.isEmpty()){
-            throw new MapperException(ErrorCode.NO_ALLOWANCE_FOUND);
-        }
-
         return allowanceChartCategoryDTOList;
     }
 
     //월, 카테고리 별 최다 소비 확인
-    public AllowanceChartCategoryDTO getMostCategoryExpense(int year, int month, String token){
+    public List<AllowanceChartCategoryDTO> getMostCategoryExpense(int year, int month, String token){
         List<AllowanceChartCategoryDTO> allowanceChartCategoryDTOList = getMonthlyCategoriesExpense(year, month ,token);
         int mostCategoryAmount = 0;
         String mostCategoryTitle = "";
 
         if (allowanceChartCategoryDTOList.isEmpty()) {
-            throw new MapperException(ErrorCode.ALLOWANCE_NOT_FOUND);
+            return allowanceChartCategoryDTOList;
         }
 
         for (AllowanceChartCategoryDTO allowanceChartCategoryDTO : allowanceChartCategoryDTOList) {
@@ -201,12 +197,16 @@ public class ExpenseService {
             }
         }
 
-        return AllowanceChartCategoryDTO.builder()
+         AllowanceChartCategoryDTO allowanceChartCategoryDTO = AllowanceChartCategoryDTO.builder()
                 .category(mostCategoryTitle)
                 .amount(mostCategoryAmount)
                 .allowanceType(AllowanceType.EXPENSE)
                 .percent(null)
                 .build();
+
+        allowanceChartCategoryDTOList.add(allowanceChartCategoryDTO);
+
+        return allowanceChartCategoryDTOList;
     }
 
     //날짜 별 소비 내역 제공
@@ -228,7 +228,7 @@ public class ExpenseService {
         List<AllowanceChart> allowanceChartList = allowanceChartRepository.findAllByUserAndAllowanceType(user, AllowanceType.EXPENSE);
 
         if (allowanceChartList.isEmpty()) {
-            throw new MapperException(ErrorCode.ALLOWANCE_NOT_FOUND);
+            return allowanceChartDTOList;
         }
 
         for (AllowanceChart allowanceChart : allowanceChartList) {
@@ -244,10 +244,6 @@ public class ExpenseService {
 
                 allowanceChartDTOList.add(allowanceChartDTO);
             }
-        }
-
-        if (allowanceChartDTOList.isEmpty()) {
-            throw new MapperException(ErrorCode.NO_ALLOWANCE_FOUND);
         }
 
         return allowanceChartDTOList;
@@ -273,7 +269,7 @@ public class ExpenseService {
         List<AllowanceChart> allowanceChartList = allowanceChartRepository.findAllByUserAndAllowanceType(user, AllowanceType.EXPENSE);
 
         if (allowanceChartList.isEmpty()) {
-            throw new MapperException(ErrorCode.ALLOWANCE_NOT_FOUND);
+            return allowanceChartDTOList;
         }
 
         for (AllowanceChart allowanceChart : allowanceChartList) {
@@ -289,10 +285,6 @@ public class ExpenseService {
 
                 allowanceChartDTOList.add(allowanceChartDTO);
             }
-        }
-
-        if (allowanceChartDTOList.isEmpty()) {
-            throw new MapperException(ErrorCode.NO_ALLOWANCE_FOUND);
         }
 
         return allowanceChartDTOList;

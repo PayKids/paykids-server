@@ -20,7 +20,7 @@ import java.util.List;
 public class IncomeAllowanceController {
     private final IncomeService incomeService;
 
-    @Operation(summary = "월 수입 전체 금액 조회", description = "주어진 달의 전체 수입 금액을 반환합니다. 수입 내역이 없으면 error return 합니다.")
+    @Operation(summary = "월 수입 전체 금액 조회", description = "주어진 달의 전체 수입 금액을 반환합니다. 수입 내역이 없으면 0을 리턴합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 확인됨"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 값"),
@@ -31,7 +31,7 @@ public class IncomeAllowanceController {
         return ApiResult.ok(incomeService.getMonthlyIncomeAmount(year, month, token));
     }
 
-    @Operation(summary = "월, 일별 수입 금액 조회", description = "주어진 달의 일별 수입 금액을 반환합니다. 수입 내역이 없으면 error return 합니다.")
+    @Operation(summary = "월, 일별 수입 금액 조회", description = "주어진 달의 일별 수입 금액을 반환합니다. 수입 내역이 없으면 빈 배열을 리턴합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 확인됨"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 값"),
@@ -42,7 +42,7 @@ public class IncomeAllowanceController {
         return ApiResult.ok(incomeService.getAllDailyIncomeAmount(year, month, token));
     }
 
-    @Operation(summary = "월, 모든 카테고리 수입 조회", description = "주어진 달의 모든 카테고리 수입를 반환합니다. 수입 내역이 없으면 error return 합니다.")
+    @Operation(summary = "월, 모든 카테고리 수입 조회", description = "주어진 달의 모든 카테고리 수입를 반환합니다. 수입 내역이 없으면 빈 배열을 리턴합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 확인됨"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 값"),
@@ -53,7 +53,7 @@ public class IncomeAllowanceController {
         return ApiResult.ok(incomeService.getMonthlyCategoriesIncome(year, month, token));
     }
 
-    @Operation(summary = "일 수입 조회", description = "주어진 일의 수입 내역을 반환합니다. 수입 내역이 없으면 error return 합니다.")
+    @Operation(summary = "일 수입 조회", description = "주어진 일의 수입 내역을 반환합니다. 수입 내역이 없으면 빈 배열을 리턴합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 확인됨"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 값"),
@@ -64,7 +64,7 @@ public class IncomeAllowanceController {
         return ApiResult.ok(incomeService.getDailyIncome(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth(), token));
     }
 
-    @Operation(summary = "월, 특정 카테고리 수입 조회", description = "주어진 달의 특정 카테고리 수입 내역을 반환합니다. 수입 내역이 없으면 error return 합니다.")
+    @Operation(summary = "월, 특정 카테고리 수입 조회", description = "주어진 달의 특정 카테고리 수입 내역을 반환합니다. 수입 내역이 없으면 빈 배열을 리턴합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 확인됨"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 값"),

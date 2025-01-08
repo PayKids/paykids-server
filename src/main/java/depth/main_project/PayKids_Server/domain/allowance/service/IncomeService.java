@@ -91,7 +91,7 @@ public class IncomeService {
         List<AllowanceChart> allowanceChartList = allowanceChartRepository.findAllByUserAndAllowanceType(user, AllowanceType.INCOME);
 
         if (allowanceChartList.isEmpty()) {
-            throw new MapperException(ErrorCode.ALLOWANCE_NOT_FOUND);
+            return allowanceChartAmountDTOList;
         }
 
         for (AllowanceChart allowanceChart : allowanceChartList) {
@@ -108,10 +108,6 @@ public class IncomeService {
                     .build();
 
             allowanceChartAmountDTOList.add(allowanceChartAmountDTO);
-        }
-
-        if (allowanceChartAmountDTOList.isEmpty()) {
-            throw new MapperException(ErrorCode.NO_ALLOWANCE_FOUND);
         }
 
         return allowanceChartAmountDTOList;
@@ -144,7 +140,7 @@ public class IncomeService {
         List<AllowanceChart> allowanceChartList = allowanceChartRepository.findAllByUserAndAllowanceType(user, AllowanceType.INCOME);
 
         if (allowanceChartList.isEmpty()) {
-            throw new MapperException(ErrorCode.ALLOWANCE_NOT_FOUND);
+            return allowanceChartCategoryDTOList;
         }
 
         for (AllowanceChart allowanceChart : allowanceChartList) {
@@ -177,10 +173,6 @@ public class IncomeService {
             allowanceChartCategoryDTOList.add(allowanceChartCategoryDTO);
         }
 
-        if(allowanceChartCategoryDTOList.isEmpty()){
-            throw new MapperException(ErrorCode.NO_ALLOWANCE_FOUND);
-        }
-
         return allowanceChartCategoryDTOList;
     }
 
@@ -203,7 +195,7 @@ public class IncomeService {
         List<AllowanceChart> allowanceChartList = allowanceChartRepository.findAllByUserAndAllowanceType(user, AllowanceType.INCOME);
 
         if (allowanceChartList.isEmpty()) {
-            throw new MapperException(ErrorCode.ALLOWANCE_NOT_FOUND);
+            return allowanceChartDTOList;
         }
 
         for (AllowanceChart allowanceChart : allowanceChartList) {
@@ -219,10 +211,6 @@ public class IncomeService {
 
                 allowanceChartDTOList.add(allowanceChartDTO);
             }
-        }
-
-        if (allowanceChartDTOList.isEmpty()) {
-            throw new MapperException(ErrorCode.NO_ALLOWANCE_FOUND);
         }
 
         return allowanceChartDTOList;
@@ -248,7 +236,7 @@ public class IncomeService {
         List<AllowanceChart> allowanceChartList = allowanceChartRepository.findAllByUserAndAllowanceType(user, AllowanceType.INCOME);
 
         if (allowanceChartList.isEmpty()) {
-            throw new MapperException(ErrorCode.ALLOWANCE_NOT_FOUND);
+            return allowanceChartDTOList;
         }
 
         for (AllowanceChart allowanceChart : allowanceChartList) {
@@ -264,10 +252,6 @@ public class IncomeService {
 
                 allowanceChartDTOList.add(allowanceChartDTO);
             }
-        }
-
-        if (allowanceChartDTOList.isEmpty()) {
-            throw new MapperException(ErrorCode.NO_ALLOWANCE_FOUND);
         }
 
         return allowanceChartDTOList;

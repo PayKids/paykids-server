@@ -371,4 +371,11 @@ public class QuizService {
 
         return false;
     }
+
+    public int getTotalQuizCount(){
+        Long longCount = stageNameRepository.count();
+        int intCount = longCount.intValue();
+
+        return intCount;
+    }
 }

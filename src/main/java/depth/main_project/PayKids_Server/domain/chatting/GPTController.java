@@ -26,7 +26,7 @@ public class GPTController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/chat")
-    public ResponseEntity<Map<String, String>> chat(@RequestParam String prompt, @RequestHeader("Auth") String token) {
+    public ResponseEntity<Map<String, String>> chat(@RequestParam String prompt, @RequestHeader("Authorization") String token) {
 
         return ResponseEntity.ok(gptService.getChatting(prompt, token));
     }
@@ -38,7 +38,7 @@ public class GPTController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @GetMapping("/number")
-    public ResponseEntity<Integer> getGPTNumber(@RequestHeader("Auth") String token) {
+    public ResponseEntity<Integer> getGPTNumber(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(gptService.getGPTNumber(token));
     }
 }
