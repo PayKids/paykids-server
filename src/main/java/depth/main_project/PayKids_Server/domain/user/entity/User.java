@@ -44,6 +44,6 @@ public class User {
         this.nickname = nickname;
         this.email = email;
         this.profileImageURL = profileImageURL;
-        this.stageStatus = 0;
+        this.stageStatus = 1;
     }
 }
