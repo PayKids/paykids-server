@@ -52,10 +52,6 @@ public class ExpenseService {
 
         List<AllowanceChart> allowanceChartList = allowanceChartRepository.findAllByUserAndAllowanceType(user, AllowanceType.EXPENSE);
 
-        if (allowanceChartList.isEmpty()) {
-            throw new MapperException(ErrorCode.ALLOWANCE_NOT_FOUND);
-        }
-
         for (AllowanceChart allowanceChart : allowanceChartList) {
             if (allowanceChart.getDate().getYear() == year && allowanceChart.getDate().getMonthValue() == month){
                 totalAmount += allowanceChart.getAmount();
@@ -90,10 +86,6 @@ public class ExpenseService {
 
         List<AllowanceChart> allowanceChartList = allowanceChartRepository.findAllByUserAndAllowanceType(user, AllowanceType.EXPENSE);
 
-        if (allowanceChartList.isEmpty()) {
-            throw new MapperException(ErrorCode.ALLOWANCE_NOT_FOUND);
-        }
-
         for (AllowanceChart allowanceChart : allowanceChartList) {
             if (allowanceChart.getDate().getYear() == year && allowanceChart.getDate().getMonthValue() == month){
                 amountList.set(allowanceChart.getDate().getDayOfMonth() - 1, amountList.get(allowanceChart.getDate().getDayOfMonth() - 1) + allowanceChart.getAmount());
@@ -108,10 +100,6 @@ public class ExpenseService {
                     .build();
 
             allowanceChartAmountDTOList.add(allowanceChartAmountDTO);
-        }
-
-        if (allowanceChartAmountDTOList.isEmpty()) {
-            throw new MapperException(ErrorCode.NO_ALLOWANCE_FOUND);
         }
 
         return allowanceChartAmountDTOList;
