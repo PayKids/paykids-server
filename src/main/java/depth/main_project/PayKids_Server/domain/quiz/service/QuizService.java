@@ -86,6 +86,16 @@ public class QuizService {
         User user = userRepository.findByUuid(userUUID)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
+        if (user.getStageStatus() > stage){
+            String realAnswer = quiz.getAnswer();
+
+            if (realAnswer.equals(answer)){
+                return true;
+            }
+
+            return false;
+        }
+
         if (quiz.getQuizType() == QuizType.SHORT_ANSWER){
             answer = answer.replaceAll("\\s", "");
             String realAnswer = quiz.getAnswer().replaceAll("\\s", "");
@@ -113,6 +123,17 @@ public class QuizService {
 
                 submissionRepository.save(submission);
                 return true;
+            } else {
+                if (submissionRepository.findByUserAndQuiz(user, quiz).isPresent()) {
+                    Submission existSubmission = submissionRepository.findByUserAndQuiz(user, quiz)
+                            .orElseThrow();
+
+                    existSubmission.setStatus(Status.RESUBMITTED);
+                    existSubmission.setSubmitDateTime(LocalDateTime.now());
+
+                    submissionRepository.save(existSubmission);
+                    return false;
+                }
             }
         } else {
             String realAnswer = quiz.getAnswer();
@@ -140,22 +161,18 @@ public class QuizService {
 
                 submissionRepository.save(submission);
                 return true;
+            } else {
+                if (submissionRepository.findByUserAndQuiz(user, quiz).isPresent()) {
+                    Submission existSubmission = submissionRepository.findByUserAndQuiz(user, quiz)
+                            .orElseThrow();
+
+                    existSubmission.setStatus(Status.RESUBMITTED);
+                    existSubmission.setSubmitDateTime(LocalDateTime.now());
+
+                    submissionRepository.save(existSubmission);
+                    return false;
+                }
             }
-        }
-
-        if (user.getStageStatus() > stage){
-            return false;
-        }
-
-        if (submissionRepository.findByUserAndQuiz(user, quiz).isPresent()){
-            Submission existSubmission = submissionRepository.findByUserAndQuiz(user, quiz)
-                    .orElseThrow();
-
-            existSubmission.setStatus(Status.RESUBMITTED);
-            existSubmission.setSubmitDateTime(LocalDateTime.now());
-
-            submissionRepository.save(existSubmission);
-            return true;
         }
 
         Submission submission = Submission.builder()
@@ -193,12 +210,12 @@ public class QuizService {
         }
 
         int count = 0;
-        int realCount = 0;
+        int realCount = 100;
 
         for (Submission submission : checkStatus){
-            if (submission.getIsAnswerTrue() && submission.getQuiz().getStage() == stage){
+            if (submission.getIsAnswerTrue() && submissionRepository.findQuizStageBySubmissionId(submission.getId()) == stage){
                 count++;
-                realCount = submission.getQuiz().getCount();
+                realCount = submissionRepository.findQuizCountBySubmissionId(submission.getId());
             }
         }
 
@@ -234,12 +251,12 @@ public class QuizService {
         }
 
         int count = 0;
-        int realCount = 0;
+        int realCount = 100;
 
         for (Submission submission : checkStatus){
-            if (submission.getIsAnswerTrue() && submission.getQuiz().getStage() == stage){
+            if (submission.getIsAnswerTrue() && submissionRepository.findQuizStageBySubmissionId(submission.getId()) == stage){
                 count++;
-                realCount = submission.getQuiz().getCount();
+                realCount = submissionRepository.findQuizCountBySubmissionId(submission.getId());
             }
         }
 
@@ -297,8 +314,8 @@ public class QuizService {
         }
 
         for (Submission submission : checkStatus){
-            if (submission.getIsAnswerTrue() == false && submission.getQuiz().getStage() == stage){
-                quizList.add(submission.getQuiz().getNumber());
+            if (submission.getIsAnswerTrue() == false && submissionRepository.findQuizStageBySubmissionId(submission.getId()) == stage){
+                quizList.add(submissionRepository.findQuizNumberBySubmissionId(submission.getId()));
             }
         }
 
@@ -330,9 +347,9 @@ public class QuizService {
         int realCount = 0;
 
         for (Submission submission : checkStatus){
-            if(submission.getQuiz().getStage() == stage){
+            if(submissionRepository.findQuizStageBySubmissionId(submission.getId()) == stage){
                 count++;
-                realCount = submission.getQuiz().getCount();
+                realCount = submissionRepository.findQuizCountBySubmissionId(submission.getId());
             }
         }
 
@@ -364,7 +381,7 @@ public class QuizService {
         }
 
         for (Submission submission : checkStatus){
-            if (submission.getStatus() == Status.RESUBMITTED){
+            if (submission.getStatus() == Status.RESUBMITTED && submissionRepository.findQuizStageBySubmissionId(submission.getId()) == stage){
                 return true;
             }
         }
