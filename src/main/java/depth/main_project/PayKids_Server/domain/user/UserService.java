@@ -100,4 +100,13 @@ public class UserService {
             s3Service.deleteFileFromS3(previousImageUrl); // S3에서 삭제
         }
     }
+
+    public String deleteUser(String uuid) {
+        User user = userRepository.findByUuid(uuid)
+                .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
+
+        userRepository.delete(user);
+
+        return "User deleted successfully";
+    }
 }
