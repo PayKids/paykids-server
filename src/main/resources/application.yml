@@ -17,6 +17,9 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
+admin:
+  secret-key: ${ADMIN_SECRET_KEY}
+
 server:
   address: 0.0.0.0  # 모든 네트워크 인터페이스에서 요청을 수락하도록 설정
   port: 8080       # 포트 설정 (기본값이 8080)
