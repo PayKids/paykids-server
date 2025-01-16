@@ -1,5 +1,11 @@
 package depth.main_project.PayKids_Server.domain.user;
 
+import depth.main_project.PayKids_Server.domain.allowance.entity.AllowanceChart;
+import depth.main_project.PayKids_Server.domain.allowance.entity.Category;
+import depth.main_project.PayKids_Server.domain.allowance.repository.AllowanceChartRepository;
+import depth.main_project.PayKids_Server.domain.allowance.repository.CategoryRepository;
+import depth.main_project.PayKids_Server.domain.quiz.entity.Submission;
+import depth.main_project.PayKids_Server.domain.quiz.repository.SubmissionRepository;
 import depth.main_project.PayKids_Server.domain.user.dto.UserDTO;
 import depth.main_project.PayKids_Server.domain.user.entity.User;
 import depth.main_project.PayKids_Server.domain.user.repository.UserRepository;
@@ -10,11 +16,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final AllowanceChartRepository allowanceChartRepository;
+    private final SubmissionRepository submissionRepository;
+    private final CategoryRepository categoryRepository;
     private final S3Service s3Service;
 
     public UserDTO getUserInfo(String uuid) {
@@ -104,6 +115,14 @@ public class UserService {
     public String deleteUser(String uuid) {
         User user = userRepository.findByUuid(uuid)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
+
+        List<Category> categoryList = categoryRepository.findAllByUser(user);
+        List<AllowanceChart> allowanceChartList = allowanceChartRepository.findAllByUser(user);
+        List<Submission> submissionList = submissionRepository.findAllByUser(user);
+
+        categoryRepository.deleteAll(categoryList);
+        allowanceChartRepository.deleteAll(allowanceChartList);
+        submissionRepository.deleteAll(submissionList);
 
         userRepository.delete(user);
 

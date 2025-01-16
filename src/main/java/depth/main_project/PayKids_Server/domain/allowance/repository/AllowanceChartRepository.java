@@ -14,5 +14,6 @@ import java.util.Optional;
 public interface AllowanceChartRepository extends JpaRepository<AllowanceChart, Long> {
     List<AllowanceChart> findAllByUserAndAllowanceTypeAndCategory(User user, AllowanceType allowanceType, Category category);
     List<AllowanceChart> findAllByUserAndAllowanceType(User user, AllowanceType allowanceType);
+    List<AllowanceChart> findAllByUser(User user);
     Optional<AllowanceChart> findByIdAndUserAndAllowanceType(Long id, User user, AllowanceType allowanceType);
 }
