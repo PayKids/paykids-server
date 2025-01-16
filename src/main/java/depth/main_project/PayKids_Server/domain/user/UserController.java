@@ -75,4 +75,18 @@ public class UserController {
 
         return ApiResult.ok(result);
     }
+
+    @Operation(summary = "프로필 사진 변경", description = "프로필 사진 변경")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 확인됨"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 값"),
+            @ApiResponse(responseCode = "500", description = "서버 오류 발생")
+    })
+    @PostMapping("/delete")
+    public ApiResult<String> changeProfileImage(@RequestHeader("Authorization") String accessToken) {
+        String userUUID = tokenService.getUserUuidFromToken(accessToken);
+        String result = userService.deleteUser(userUUID);
+
+        return ApiResult.ok(result);
+    }
 }
