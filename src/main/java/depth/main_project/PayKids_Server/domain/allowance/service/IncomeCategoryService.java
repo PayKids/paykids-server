@@ -43,7 +43,7 @@ public class IncomeCategoryService {
         User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
-        List<Category> categoryList = categoryRepository.findAllByUserAndAllowanceType(user, AllowanceType.INCOME);
+        List<Category> categoryList = categoryRepository.findAllByUserAndAllowanceTypeOrderByIdDesc(user, AllowanceType.INCOME);
 
         if (categoryList == null || categoryList.size() == 0) {
             throw new MapperException(ErrorCode.CATEGORY_NOT_FOUND);
@@ -78,7 +78,7 @@ public class IncomeCategoryService {
         User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
-        List<Category> categoryList = categoryRepository.findAllByUserAndAllowanceType(user, AllowanceType.INCOME);
+        List<Category> categoryList = categoryRepository.findAllByUserAndAllowanceTypeOrderByIdDesc(user, AllowanceType.INCOME);
 
         if (categoryList == null || categoryList.size() == 0) {
             return false;
