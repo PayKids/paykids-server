@@ -44,7 +44,7 @@ public class ExpenseCategoryService {
         User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
-        List<Category> categoryList = categoryRepository.findAllByUserAndAllowanceType(user, AllowanceType.EXPENSE);
+        List<Category> categoryList = categoryRepository.findAllByUserAndAllowanceTypeOrderByIdDesc(user, AllowanceType.EXPENSE);
 
         if (categoryList == null || categoryList.size() == 0) {
            return categoryDTOList;
@@ -79,7 +79,7 @@ public class ExpenseCategoryService {
         User user = userRepository.findByUuid(userId)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
-        List<Category> categoryList = categoryRepository.findAllByUserAndAllowanceType(user, AllowanceType.EXPENSE);
+        List<Category> categoryList = categoryRepository.findAllByUserAndAllowanceTypeOrderByIdDesc(user, AllowanceType.EXPENSE);
 
         if (categoryList == null || categoryList.size() == 0) {
             return false;
