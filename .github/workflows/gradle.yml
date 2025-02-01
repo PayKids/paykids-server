@@ -87,6 +87,7 @@ jobs:
             echo "✅ .env 파일 변경 없음 → 업로드 생략!"
           fi
 
+
       # 9. 최신 컨테이너 실행 (기존 컨테이너 중지 후 교체)
       - name: Deploy and Replace Old Container
         run: |

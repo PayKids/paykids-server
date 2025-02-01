@@ -87,13 +87,59 @@ public class QuizService {
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         if (user.getStageStatus() > stage){
-            String realAnswer = quiz.getAnswer();
+            if (quiz.getQuizType() == QuizType.SHORT_ANSWER) {
+                answer = answer.replaceAll("\\s", "");
+                String realAnswer = quiz.getAnswer().replaceAll("\\s", "");
 
-            if (realAnswer.equals(answer)){
-                return true;
+                if (realAnswer.equals(answer)) {
+                    if (submissionRepository.findByUserAndQuiz(user, quiz).isPresent()) {
+                        Submission existSubmission = submissionRepository.findByUserAndQuiz(user, quiz)
+                                .orElseThrow();
+
+                        existSubmission.setStatus(Status.RESUBMITTED);
+                        existSubmission.setIsAnswerTrue(true);
+                        existSubmission.setSubmitDateTime(LocalDateTime.now());
+
+                        submissionRepository.save(existSubmission);
+                        return true;
+                    }
+                }
+                Submission existSubmission = submissionRepository.findByUserAndQuiz(user, quiz)
+                        .orElseThrow();
+
+                existSubmission.setStatus(Status.RESUBMITTED);
+                existSubmission.setSubmitDateTime(LocalDateTime.now());
+
+                submissionRepository.save(existSubmission);
+
+                return false;
+
+            } else {
+                String realAnswer = quiz.getAnswer();
+
+                if (realAnswer.equals(answer)) {
+                    if (submissionRepository.findByUserAndQuiz(user, quiz).isPresent()) {
+                        Submission existSubmission = submissionRepository.findByUserAndQuiz(user, quiz)
+                                .orElseThrow();
+
+                        existSubmission.setStatus(Status.RESUBMITTED);
+                        existSubmission.setIsAnswerTrue(true);
+                        existSubmission.setSubmitDateTime(LocalDateTime.now());
+
+                        submissionRepository.save(existSubmission);
+                        return true;
+                    }
+                }
+                Submission existSubmission = submissionRepository.findByUserAndQuiz(user, quiz)
+                        .orElseThrow();
+
+                existSubmission.setStatus(Status.RESUBMITTED);
+                existSubmission.setSubmitDateTime(LocalDateTime.now());
+
+                submissionRepository.save(existSubmission);
+
+                return false;
             }
-
-            return false;
         }
 
         if (quiz.getQuizType() == QuizType.SHORT_ANSWER){
