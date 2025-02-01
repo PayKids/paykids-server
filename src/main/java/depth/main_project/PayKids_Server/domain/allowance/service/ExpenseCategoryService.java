@@ -7,6 +7,7 @@ import depth.main_project.PayKids_Server.domain.allowance.entity.Category;
 import depth.main_project.PayKids_Server.domain.allowance.repository.AllowanceChartRepository;
 import depth.main_project.PayKids_Server.domain.allowance.repository.CategoryRepository;
 import depth.main_project.PayKids_Server.domain.auth.TokenService;
+import depth.main_project.PayKids_Server.domain.quest.service.QuestService;
 import depth.main_project.PayKids_Server.domain.user.entity.User;
 import depth.main_project.PayKids_Server.domain.user.repository.UserRepository;
 import depth.main_project.PayKids_Server.global.exception.ErrorCode;
@@ -26,6 +27,7 @@ public class ExpenseCategoryService {
     private final AllowanceChartRepository allowanceChartRepository;
     private final UserRepository userRepository;
     private final TokenService tokenService;
+    private final QuestService questService;
 
     //지출 카테고리 전부 조회
     public List<CategoryDTO> getExpenseAllCategory(String token) {
@@ -127,6 +129,8 @@ public class ExpenseCategoryService {
                 .title(name)
                 .allowanceType(AllowanceType.EXPENSE)
                 .build();
+
+        questService.questManage(user, 10L);
 
         categoryRepository.save(category);
 

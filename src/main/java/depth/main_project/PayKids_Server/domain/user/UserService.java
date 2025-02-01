@@ -1,9 +1,13 @@
 package depth.main_project.PayKids_Server.domain.user;
 
+import depth.main_project.PayKids_Server.domain.achievement.entity.UserAchievement;
+import depth.main_project.PayKids_Server.domain.achievement.repository.UserAchievementRepository;
 import depth.main_project.PayKids_Server.domain.allowance.entity.AllowanceChart;
 import depth.main_project.PayKids_Server.domain.allowance.entity.Category;
 import depth.main_project.PayKids_Server.domain.allowance.repository.AllowanceChartRepository;
 import depth.main_project.PayKids_Server.domain.allowance.repository.CategoryRepository;
+import depth.main_project.PayKids_Server.domain.quest.entity.UserQuest;
+import depth.main_project.PayKids_Server.domain.quest.repository.UserQuestRepository;
 import depth.main_project.PayKids_Server.domain.quiz.entity.Submission;
 import depth.main_project.PayKids_Server.domain.quiz.repository.SubmissionRepository;
 import depth.main_project.PayKids_Server.domain.user.dto.UserDTO;
@@ -26,6 +30,8 @@ public class UserService {
     private final AllowanceChartRepository allowanceChartRepository;
     private final SubmissionRepository submissionRepository;
     private final CategoryRepository categoryRepository;
+    private final UserAchievementRepository achievementRepository;
+    private final UserQuestRepository questRepository;
     private final S3Service s3Service;
 
     public UserDTO getUserInfo(String uuid) {
@@ -119,10 +125,14 @@ public class UserService {
         List<Category> categoryList = categoryRepository.findAllByUser(user);
         List<AllowanceChart> allowanceChartList = allowanceChartRepository.findAllByUser(user);
         List<Submission> submissionList = submissionRepository.findAllByUser(user);
+        List<UserAchievement> userAchievementList = achievementRepository.findAllByUser(user);
+        List<UserQuest> userQuestList = questRepository.findAllByUser(user);
 
         categoryRepository.deleteAll(categoryList);
         allowanceChartRepository.deleteAll(allowanceChartList);
         submissionRepository.deleteAll(submissionList);
+        achievementRepository.deleteAll(userAchievementList);
+        questRepository.deleteAll(userQuestList);
 
         userRepository.delete(user);
 

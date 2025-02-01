@@ -1,5 +1,6 @@
 package depth.main_project.PayKids_Server.domain.allowance.service;
 
+import depth.main_project.PayKids_Server.domain.achievement.dto.UserAchievementUpdateEvent;
 import depth.main_project.PayKids_Server.domain.allowance.dto.AllowanceChartCategoryDTO;
 import depth.main_project.PayKids_Server.domain.allowance.dto.AllowanceChartDTO;
 import depth.main_project.PayKids_Server.domain.allowance.dto.AllowanceChartAmountDTO;
@@ -10,12 +11,14 @@ import depth.main_project.PayKids_Server.domain.allowance.entity.Category;
 import depth.main_project.PayKids_Server.domain.allowance.repository.AllowanceChartRepository;
 import depth.main_project.PayKids_Server.domain.allowance.repository.CategoryRepository;
 import depth.main_project.PayKids_Server.domain.auth.TokenService;
+import depth.main_project.PayKids_Server.domain.quest.service.QuestService;
 import depth.main_project.PayKids_Server.domain.user.entity.User;
 import depth.main_project.PayKids_Server.domain.user.repository.UserRepository;
 import depth.main_project.PayKids_Server.global.exception.ErrorCode;
 import depth.main_project.PayKids_Server.global.exception.MapperException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -33,6 +36,8 @@ public class ExpenseService {
     private final CategoryRepository categoryRepository;
     private final TokenService tokenService;
     private final ExpenseCategoryService expenseCategoryService;
+    private final QuestService questService;
+    private final ApplicationEventPublisher eventPublisher;
 
     //월별 소비 총 금액 조회
     public int getMonthlyExpenseAmount(int year, int month, String token){
@@ -302,7 +307,7 @@ public class ExpenseService {
             throw new MapperException(ErrorCode.CATEGORY_NOT_FOUND);
         }
 
-        AllowanceChart allowanceChart = AllowanceChart.builder()
+        AllowanceChart newAllowanceChart = AllowanceChart.builder()
                 .date(LocalDate.of(year, month, day))
                 .allowanceType(AllowanceType.EXPENSE)
                 .category(categoryEntity.get())
@@ -311,7 +316,27 @@ public class ExpenseService {
                 .user(user)
                 .build();
 
-        allowanceChartRepository.save(allowanceChart);
+        List<AllowanceChart> allowanceChartList = allowanceChartRepository.findAllByUserAndAllowanceType(user, AllowanceType.EXPENSE);
+        int preCount = 0;
+        int twoDaysCount = 0;
+        LocalDate previousDay = LocalDate.now().minusDays(1);
+        LocalDate twoDaysDate = LocalDate.now().minusDays(2);
+
+        for(AllowanceChart allowanceChart :allowanceChartList){
+            if (allowanceChart.getDate() == previousDay){
+               preCount++;
+            } else if (allowanceChart.getDate() == twoDaysDate) {
+                twoDaysCount++;
+            }
+        }
+
+        if (preCount > 0 && twoDaysCount > 0){
+            eventPublisher.publishEvent(new UserAchievementUpdateEvent(user, 9L));
+        }
+
+        questService.questManage(user, 7L);
+
+        allowanceChartRepository.save(newAllowanceChart);
 
         return true;
     }
