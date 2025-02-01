@@ -87,13 +87,15 @@ jobs:
             echo "✅ .env 파일 변경 없음 → 업로드 생략!"
           fi
 
-      # 9. 최신 컨테이너 실행 (기존 컨테이너 중지 없이 교체)
+
+      # 9. 최신 컨테이너 실행 (기존 컨테이너 중지 후 교체)
       - name: Deploy and Replace Old Container
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
             cd ~/docker-setup
+            docker-compose down -v # 기존 컨테이너 중지 및 삭제
             docker-compose pull  # 최신 Docker 이미지 가져오기
-            docker-compose up -d --force-recreate --remove-orphans  # 기존 컨테이너 자동 교체
+            docker-compose up -d  # 최신 컨테이너 실행
           EOF
 
       # 10. 미사용 Docker 컨테이너 및 이미지 정리
