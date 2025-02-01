@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -36,6 +37,11 @@ public class User {
 
     //진행해야 하는 스테이지 상태를 의미한다.
     private Integer stageStatus = 1;
+
+    //연속 학습 일수
+    private Integer streak = 0;
+
+    private LocalDate lastStreak;
 
     @Builder
     public User(String kakaoId,  String username, String nickname, String email, String profileImageURL) {

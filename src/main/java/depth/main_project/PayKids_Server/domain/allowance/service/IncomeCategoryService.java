@@ -7,6 +7,7 @@ import depth.main_project.PayKids_Server.domain.allowance.entity.Category;
 import depth.main_project.PayKids_Server.domain.allowance.repository.AllowanceChartRepository;
 import depth.main_project.PayKids_Server.domain.allowance.repository.CategoryRepository;
 import depth.main_project.PayKids_Server.domain.auth.TokenService;
+import depth.main_project.PayKids_Server.domain.quest.service.QuestService;
 import depth.main_project.PayKids_Server.domain.user.entity.User;
 import depth.main_project.PayKids_Server.domain.user.repository.UserRepository;
 import depth.main_project.PayKids_Server.global.exception.ErrorCode;
@@ -26,6 +27,7 @@ public class IncomeCategoryService {
     private final AllowanceChartRepository allowanceChartRepository;
     private final UserRepository userRepository;
     private final TokenService tokenService;
+    private final QuestService questService;
 
     //수입 카테고리 전부 조회
     public List<CategoryDTO> getIncomeAllCategory(String token) {
@@ -127,12 +129,14 @@ public class IncomeCategoryService {
                 .allowanceType(AllowanceType.INCOME)
                 .build();
 
+        questService.questManage(user, 10L);
+
         categoryRepository.save(category);
 
         return true;
     }
 
-    //소비 카테고리 삭제, 기타인 경우 삭제하지 않음.
+    //수입 카테고리 삭제, 기타인 경우 삭제하지 않음.
     @Transactional
     public Boolean deleteIncomeCategory(String token, String name) {
         name = name.replaceAll("\\s", "");

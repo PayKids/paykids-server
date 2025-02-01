@@ -14,6 +14,7 @@ import java.util.Optional;
 @Repository
 public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     List<Submission> findAllByUser(User user);
+    List<Submission> findAllByUserAndIsAnswerTrueTrue(User user);
     Optional<Submission> findByUserAndQuiz(User user, Quiz quiz);
 
     @Query("SELECT q.stage FROM Submission s JOIN s.quiz q WHERE s.id = :submissionId")
