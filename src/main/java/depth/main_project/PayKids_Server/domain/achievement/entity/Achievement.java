@@ -15,6 +15,7 @@ public class Achievement {
     private Long id;
     private String name;
     private String description;
+    private String imageURL;
 
     @Builder
     public Achievement(String name, String description) {
