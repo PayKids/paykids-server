@@ -12,4 +12,6 @@ import lombok.Setter;
 public class UserAchievementDTO {
     private Boolean isCompleted;
     private String name;
+    private String description;
+    private String imageURL;
 }

@@ -50,6 +50,8 @@ public class AchievementService {
                 UserAchievementDTO userAchievementDTO = UserAchievementDTO.builder()
                         .isCompleted(userAchievement.get().getIsCompleted())
                         .name(achievement.getName())
+                        .description(achievement.getDescription())
+                        .imageURL(achievement.getImageURL())
                         .build();
 
                 userAchievements.add(userAchievementDTO);
@@ -58,6 +60,8 @@ public class AchievementService {
             UserAchievementDTO userAchievementDTO = UserAchievementDTO.builder()
                     .isCompleted(false)
                     .name(achievement.getName())
+                    .description(achievement.getDescription())
+                    .imageURL(achievement.getImageURL())
                     .build();
 
             userAchievements.add(userAchievementDTO);
