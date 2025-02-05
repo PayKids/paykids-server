@@ -40,7 +40,7 @@ public class GPTService {
     private final QuestService questService;
     private final ApplicationEventPublisher eventPublisher;
 
-    @Value("ft:gpt-4o-mini-2024-07-18:personal::AmIGcMts")
+    @Value("ft:gpt-4o-mini-2024-07-18:personal::AxXy5f5c")
     private String model;
 
     @Value("${gpt.api.url}")
