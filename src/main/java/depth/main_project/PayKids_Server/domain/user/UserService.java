@@ -128,11 +128,11 @@ public class UserService {
         List<UserAchievement> userAchievementList = achievementRepository.findAllByUser(user);
         List<UserQuest> userQuestList = questRepository.findAllByUser(user);
 
-        categoryRepository.deleteAll(categoryList);
         allowanceChartRepository.deleteAll(allowanceChartList);
         submissionRepository.deleteAll(submissionList);
         achievementRepository.deleteAll(userAchievementList);
         questRepository.deleteAll(userQuestList);
+        categoryRepository.deleteAll(categoryList);
 
         userRepository.delete(user);
 
