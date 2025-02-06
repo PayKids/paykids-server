@@ -258,7 +258,7 @@ public class QuizService {
             throw new MapperException(ErrorCode.TOKEN_ERROR);
         }
 
-        User user = userRepository.findByUuid(token)
+        User user = userRepository.findByUuid(userUUID)
                 .orElseThrow(() -> new MapperException(ErrorCode.USER_NOT_FOUND));
 
         List<Submission> checkStatus = submissionRepository.findAllByUser(user);
@@ -438,6 +438,7 @@ public class QuizService {
     //복습인지 아닌지 확인
     public Boolean isRestudy(int stage, String token){
         String userUUID = tokenService.getUserUuidFromToken(token);
+
         if (tokenService.expiredToken(token) == false){
             throw new MapperException(ErrorCode.TOKEN_EXPIRED_ERROR);
         }
