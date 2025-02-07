@@ -9,7 +9,9 @@ import depth.main_project.PayKids_Server.domain.allowance.repository.CategoryRep
 import depth.main_project.PayKids_Server.domain.quest.entity.UserQuest;
 import depth.main_project.PayKids_Server.domain.quest.repository.UserQuestRepository;
 import depth.main_project.PayKids_Server.domain.quiz.entity.Submission;
+import depth.main_project.PayKids_Server.domain.quiz.entity.UserStage;
 import depth.main_project.PayKids_Server.domain.quiz.repository.SubmissionRepository;
+import depth.main_project.PayKids_Server.domain.quiz.repository.UserStageRepository;
 import depth.main_project.PayKids_Server.domain.user.dto.UserDTO;
 import depth.main_project.PayKids_Server.domain.user.entity.User;
 import depth.main_project.PayKids_Server.domain.user.repository.UserRepository;
@@ -32,6 +34,7 @@ public class UserService {
     private final CategoryRepository categoryRepository;
     private final UserAchievementRepository achievementRepository;
     private final UserQuestRepository questRepository;
+    private final UserStageRepository stageRepository;
     private final S3Service s3Service;
 
     public UserDTO getUserInfo(String uuid) {
@@ -127,12 +130,14 @@ public class UserService {
         List<Submission> submissionList = submissionRepository.findAllByUser(user);
         List<UserAchievement> userAchievementList = achievementRepository.findAllByUser(user);
         List<UserQuest> userQuestList = questRepository.findAllByUser(user);
+        List<UserStage> userStageList = stageRepository.findAllByUser(user);
 
         allowanceChartRepository.deleteAll(allowanceChartList);
         submissionRepository.deleteAll(submissionList);
         achievementRepository.deleteAll(userAchievementList);
         questRepository.deleteAll(userQuestList);
         categoryRepository.deleteAll(categoryList);
+        stageRepository.deleteAll(userStageList);
 
         userRepository.delete(user);
 
