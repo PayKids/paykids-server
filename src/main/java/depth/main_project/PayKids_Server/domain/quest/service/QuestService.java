@@ -52,7 +52,7 @@ public class QuestService {
         for (UserQuest userQuest : userQuestList) {
             UserQuestDTO userQuestDTO = UserQuestDTO.builder()
                     .count(0)
-                    .isComplete(false)
+                    .isComplete(userQuest.getIsComplete())
                     .maxCount(userQuestRepository.findQuestCountByQuestId(userQuest.getId()))
                     .name(userQuestRepository.findQuestNameByQuestId(userQuest.getId()))
                     .build();
