@@ -1,62 +1,34 @@
-name: Java CI with Gradle and Docker
+name: Java CI with Gradle (No Docker)
 
 on:
-  workflow_dispatch:
   push:
     branches: ["main"]
   pull_request:
     branches: ["main"]
 
-permissions:
-  contents: read
-
 jobs:
-  build-docker-image:
-    runs-on: ubuntu-22.04
+  build-and-deploy:
+    runs-on: ubuntu-latest
 
     steps:
-      # 1. GitHub 저장소 코드 가져오기
+      # 1. Checkout
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Java 17 환경 설정
+      # 2. Java 17
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: "17"
           distribution: "temurin"
 
-      # 3. Gradle로 Spring Boot 애플리케이션 빌드
+      # 3. Build JAR
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
           arguments: clean bootJar
 
-      # 4. Docker 이미지 빌드 및 태깅
-      - name: Build Docker Image
-        run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-paykids:${{ github.sha }} .
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-paykids:${{ github.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-paykids:latest
-
-      # 5. Docker Hub 로그인
-      - name: Docker Hub Login
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      # 6. Docker Hub에 최신 이미지 푸시
-      - name: Push Docker Image to Docker Hub
-        run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-paykids:${{ github.sha }}
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-paykids:latest
-
-  deploy-on-ec2:
-    needs: build-docker-image
-    runs-on: ubuntu-latest
-
-    steps:
-      # 7. SSH 키 설정 및 EC2 접속 준비
+      # 4. Setup SSH
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -64,9 +36,12 @@ jobs:
           chmod 600 ~/.ssh/ec2_key.pem
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      # 8. `.env` 파일이 변경된 경우에만 EC2에 업로드
-      - name: Upload .env file to EC2 only if changed
+      # 5. Upload .jar & .env
+      - name: Upload JAR and .env to EC2
         run: |
+          JAR_NAME=$(find build/libs -name "*.jar" | head -n 1)
+          scp -i ~/.ssh/ec2_key.pem "$JAR_NAME" ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/app.jar
+
           echo "DB_URL=${{ secrets.DB_URL }}" > .env
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
@@ -78,44 +53,24 @@ jobs:
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
           echo "ADMIN_SECRET_KEY=${{ secrets.ADMIN_SECRET_KEY }}" >> .env
 
-          # 디렉토리 존재 확인 및 생성
-          ssh -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_HOST }} "mkdir -p /home/ubuntu/docker-setup"
+          scp -i ~/.ssh/ec2_key.pem .env ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/.env
 
-          # 기존 .env 파일 백업
-          scp -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/docker-setup/.env .env.old || touch .env.old
-
-          # 변경 시 업로드
-          if ! diff .env .env.old > /dev/null; then
-            echo "🔄 .env 파일 변경됨 → 새 파일 업로드!"
-            scp -i ~/.ssh/ec2_key.pem .env ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/docker-setup/.env
-            ssh -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_HOST }} "chmod 600 /home/ubuntu/docker-setup/.env"
-          else
-            echo "✅ .env 파일 변경 없음 → 업로드 생략!"
-          fi
-
-
-      # 9. 최신 컨테이너 실행 (기존 컨테이너 중지 후 교체)
-      - name: Deploy and Replace Old Container
+      # 6. Run app on EC2
+      - name: Restart Spring Boot app
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
-            cd ~/docker-setup
-            docker-compose down -v # 기존 컨테이너 중지 및 삭제
-            docker rmi -f ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-paykids:latest || true
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-paykids:latest  # 최신 Docker 이미지 가져오기
-            docker-compose up -d --force-recreate  # 최신 컨테이너 실행 (강제 재시작)
+          ssh -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+            # 종료 중인 프로세스 찾기
+            PID=$(pgrep -f 'java -jar')
+            if [ -n "$PID" ]; then
+              echo "🔻 기존 앱 종료: PID=$PID"
+              kill -9 $PID
+            fi
+
+            # 앱 실행 (.env에서 환경변수 로딩)
+            echo "🚀 앱 실행 시작"
+            nohup bash -c 'set -a && source /home/ubuntu/.env && java -jar /home/ubuntu/app.jar' > app.log 2>&1 &
+            sleep 2
+            echo "🧾 실행 로그:"
+            tail -n 20 app.log
           EOF
 
-      # 10. 미사용 Docker 컨테이너 및 이미지 정리
-      - name: Clean Up Unused Docker Containers and Images
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
-            docker system prune -af  # 불필요한 컨테이너, 네트워크, 이미지 삭제
-          EOF
-
-      # 11. 배포 완료 후 실행 로그 확인
-      - name: Check Logs
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
-            cd ~/docker-setup
-            docker-compose logs --tail=50
-          EOF
