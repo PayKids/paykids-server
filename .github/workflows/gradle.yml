@@ -78,8 +78,13 @@ jobs:
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
           echo "ADMIN_SECRET_KEY=${{ secrets.ADMIN_SECRET_KEY }}" >> .env
 
-          # 기존 .env 파일과 비교하여 변경 여부 확인 후 업로드
+          # 디렉토리 존재 확인 및 생성
+          ssh -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_HOST }} "mkdir -p /home/ubuntu/docker-setup"
+
+          # 기존 .env 파일 백업
           scp -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/docker-setup/.env .env.old || touch .env.old
+
+          # 변경 시 업로드
           if ! diff .env .env.old > /dev/null; then
             echo "🔄 .env 파일 변경됨 → 새 파일 업로드!"
             scp -i ~/.ssh/ec2_key.pem .env ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/docker-setup/.env
