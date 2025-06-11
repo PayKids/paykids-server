@@ -7,10 +7,7 @@ import depth.main_project.PayKids_Server.domain.quiz.entity.Quiz;
 import depth.main_project.PayKids_Server.domain.quiz.entity.QuizType;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,9 +21,9 @@ public class QuizDTO {
     private int count;
     private QuizType quizType;
     private String question;
-    private List<String> choices;
+    private Map<String, String> choices;
     private String answer;
-    private List<String> imageURL;
+    private Map<String, String> imageURL;
 
     public static QuizDTO fromEntity(Quiz quiz, ObjectMapper objectMapper) {
         try {
@@ -40,19 +37,38 @@ public class QuizDTO {
 
             // null이나 빈 문자열 처리
             if (quiz.getChoices() != null && !quiz.getChoices().isEmpty()) {
-                dto.choices = objectMapper.readValue(quiz.getChoices(), new TypeReference<List<String>>() {});
+                List<String> list = objectMapper.readValue(quiz.getChoices(), new TypeReference<List<String>>() {});
+
+                Map<String, String> map = new LinkedHashMap<>();
+                for (int i = 0; i < list.size(); i++) {
+                    // 알파벳 A부터 시작 (A=65 in ASCII)
+                    String key = String.valueOf((char) ('A' + i));
+                    map.put(key, list.get(i));
+                }
+
+                dto.choices = map;
 
             } else {
-                dto.choices = new ArrayList<>();
+                dto.choices = new LinkedHashMap<>();
             }
 
             dto.answer = quiz.getAnswer();
 
             // null이나 빈 문자열 처리
             if (quiz.getImageURL() != null && !quiz.getImageURL().isEmpty()) {
-                dto.imageURL = objectMapper.readValue(quiz.getImageURL(), new TypeReference<List<String>>() {});
+                List<String> list = objectMapper.readValue(quiz.getImageURL(), new TypeReference<List<String>>() {});
+
+                Map<String, String> map = new LinkedHashMap<>();
+                for (int i = 0; i < list.size(); i++) {
+                    // 알파벳 A부터 시작 (A=65 in ASCII)
+                    String key = String.valueOf((char) ('A' + i));
+                    map.put(key, list.get(i));
+                }
+
+                dto.choices = map;
+
             } else {
-                dto.choices = new ArrayList<>();
+                dto.choices = new LinkedHashMap<>();
             }
 
             return dto;
