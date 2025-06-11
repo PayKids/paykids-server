@@ -60,15 +60,14 @@ public class QuizDTO {
 
                 Map<String, String> map = new LinkedHashMap<>();
                 for (int i = 0; i < list.size(); i++) {
-                    // 알파벳 A부터 시작 (A=65 in ASCII)
-                    String key = String.valueOf((char) ('A' + i));
+                    String key = "image" + (i + 1);
                     map.put(key, list.get(i));
                 }
 
-                dto.choices = map;
+                dto.imageURL = map;
 
             } else {
-                dto.choices = new LinkedHashMap<>();
+                dto.imageURL = new LinkedHashMap<>();
             }
 
             return dto;
