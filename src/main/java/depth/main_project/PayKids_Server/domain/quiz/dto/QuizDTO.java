@@ -7,7 +7,9 @@ import depth.main_project.PayKids_Server.domain.quiz.entity.Quiz;
 import depth.main_project.PayKids_Server.domain.quiz.entity.QuizType;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @AllArgsConstructor
@@ -22,9 +24,9 @@ public class QuizDTO {
     private int count;
     private QuizType quizType;
     private String question;
-    private Map<String, String> choices;
+    private List<String> choices;
     private String answer;
-    private Map<String, String> imageURL;
+    private List<String> imageURL;
 
     public static QuizDTO fromEntity(Quiz quiz, ObjectMapper objectMapper) {
         try {
@@ -38,19 +40,19 @@ public class QuizDTO {
 
             // null이나 빈 문자열 처리
             if (quiz.getChoices() != null && !quiz.getChoices().isEmpty()) {
-                dto.choices = objectMapper.readValue(quiz.getChoices(), new TypeReference<Map<String, String>>() {});
+                dto.choices = objectMapper.readValue(quiz.getChoices(), new TypeReference<List<String>>() {});
 
             } else {
-                dto.choices = new HashMap<>();
+                dto.choices = new ArrayList<>();
             }
 
             dto.answer = quiz.getAnswer();
 
             // null이나 빈 문자열 처리
             if (quiz.getImageURL() != null && !quiz.getImageURL().isEmpty()) {
-                dto.imageURL = objectMapper.readValue(quiz.getImageURL(), new TypeReference<Map<String, String>>() {});
+                dto.imageURL = objectMapper.readValue(quiz.getImageURL(), new TypeReference<List<String>>() {});
             } else {
-                dto.choices = new HashMap<>();
+                dto.choices = new ArrayList<>();
             }
 
             return dto;

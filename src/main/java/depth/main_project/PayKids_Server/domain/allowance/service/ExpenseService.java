@@ -331,7 +331,7 @@ public class ExpenseService {
         }
 
         if (preCount > 0 && twoDaysCount > 0){
-            eventPublisher.publishEvent(new UserAchievementUpdateEvent(user, 9L));
+            eventPublisher.publishEvent(new UserAchievementUpdateEvent(user, 7L));
         }
 
         questService.questManage(user, 7L);
