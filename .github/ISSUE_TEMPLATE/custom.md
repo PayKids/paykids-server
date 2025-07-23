@@ -1,9 +1,10 @@
 ---
-name: 🐞 BUG
+name: "\U0001F41E BUG"
 about: BUG 발생시 사용해주세요.
-title: "🐞 요약"
-labels: "🐞 Debug"
-assignees: []
+title: "\U0001F41E 요약"
+labels: "\U0001F41E Debug"
+assignees: ''
+
 ---
 
 ## 🐞 버그 설명
@@ -24,6 +25,3 @@ assignees: []
 
 - [ ] todo 1
 - [ ] todo 2
-
-
-
