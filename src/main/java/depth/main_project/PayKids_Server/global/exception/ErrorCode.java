@@ -29,7 +29,7 @@ public enum ErrorCode {
     GPT_RESET_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "유저 사용량 초기화 중 에러 발생"),
     TOKEN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "토큰 해석 문제가 발생했습니다"),
     INVALUE_SECRET_KEY(HttpStatus.FORBIDDEN, "유효한 Secret Key가 아닙니다."),
-    TOKEN_EXPIRED_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "토큰 유효기간이 만료되었습니다");
+    TOKEN_EXPIRED_ERROR(HttpStatus.UNAUTHORIZED, "토큰 유효기간이 만료되었습니다");
 
 
     private final HttpStatus httpStatus;
